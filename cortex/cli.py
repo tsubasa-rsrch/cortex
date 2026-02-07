@@ -37,6 +37,7 @@ def replay_main():
         if path is None:
             candidates = [
                 Path.home() / ".tsubasa-daemon" / "memory" / "event_log.jsonl",
+                Path(__file__).parent / "data" / "sample_events.jsonl",
                 Path(__file__).parent.parent / "examples" / "sample_events.jsonl",
             ]
             for p in candidates:

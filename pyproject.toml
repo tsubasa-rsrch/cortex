@@ -39,3 +39,6 @@ Repository = "https://github.com/tsubasa-rsrch/cortex"
 
 [tool.setuptools.packages.find]
 include = ["cortex*"]
+
+[tool.setuptools.package-data]
+cortex = ["data/*.jsonl"]

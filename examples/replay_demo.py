@@ -2,13 +2,12 @@
 """
 Cortex Replay Demo: Real-World Data Pipeline
 =============================================
-Replays 1,141 real events from a 22-hour daemon session through
+Replays 1,155 real events from a 22-hour daemon session through
 the Cortex perception pipeline to demonstrate cognitive filtering.
 
 Data source: tsubasa-daemon motion detection + Telegram messages
-  - 932 motion events from bedroom/kitchen cameras
-  - 207 Telegram messages
-  - 2 system events
+  - 944 motion events from bedroom/kitchen cameras
+  - 211 Telegram messages (content sanitized for privacy)
 
 This is NOT synthetic data. This is what happens when you give
 an AI agent real eyes (cameras) and let it watch the world.
@@ -52,6 +51,7 @@ def load_events(path: str = None) -> list:
         candidates = [
             Path.home() / ".tsubasa-daemon" / "memory" / "event_log.jsonl",
             Path(__file__).parent / "sample_events.jsonl",
+            Path(__file__).parent.parent / "cortex" / "data" / "sample_events.jsonl",
         ]
         for p in candidates:
             if p.exists():
