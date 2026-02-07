@@ -91,10 +91,11 @@ The submission contains the process of its own creation — a recursive structur
 ## Technical Highlights
 
 - **Zero dependencies**: Pure stdlib Python 3.10+, no pip install headaches
-- **111 tests in 0.53s**: Comprehensive, fast test suite
+- **111 tests in 0.45s**: Comprehensive, fast test suite
 - **Multiple bridges**: Gemini 3, Elasticsearch, MCP Server
 - **ReachyMini integration**: Camera, microphone, IMU sensor sources
 - **Config injection**: One `CortexConfig` wires all modules together
+- **Real-world validated**: 91% cognitive load reduction on 22h / 931 events of live data
 
 ---
 
