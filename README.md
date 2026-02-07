@@ -487,6 +487,8 @@ Cortex's HabituationFilter has been validated against 22 hours of real-world mot
 
 The filter correctly identified circadian patterns in household activity (peaks at 7am/12pm/10pm, quiet at 2-3am) and separated routine movement from novel events — the same distinction human perception makes unconsciously.
 
+![Motion Detection Heatmap](docs/motion_heatmap.png)
+
 **Try it yourself:**
 
 ```bash
