@@ -492,8 +492,13 @@ The filter correctly identified circadian patterns in household activity (peaks 
 **Try it yourself:**
 
 ```bash
+# Replay historical data with colored output
 python examples/replay_demo.py          # Uses real event log if available
 python examples/replay_demo.py --verbose # Show individual filter decisions
+
+# Live real-time monitoring (watches daemon event log)
+python examples/live_dashboard.py           # Full-screen mode
+python examples/live_dashboard.py --compact # Streaming mode
 ```
 
 **Configuration used:** `cooldown=30s, base_threshold=15.0, orienting_mult=2.0`
