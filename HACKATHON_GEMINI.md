@@ -29,9 +29,9 @@ GEMINI_API_KEY=your-key python examples/gemini_cognitive_agent.py
 - [x] New application (built for this hackathon)
 - [x] README with setup instructions
 - [x] Demo script with mock + real API modes
-- [ ] 3-minute demo video
-- [ ] Devpost registration
-- [ ] Gemini API key for live demo
+- [x] 3-minute demo video (recorded by Kana)
+- [x] Devpost registration — submitted! https://devpost.com/software/cortex-cognitive-perception-for-ai-agents
+- [x] Gemini API key for live demo (Google AI Studio key obtained)
 
 ## Key Differentiators
 
