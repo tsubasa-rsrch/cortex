@@ -95,7 +95,8 @@ The submission contains the process of its own creation — a recursive structur
 - **Multiple bridges**: Gemini 3, Elasticsearch, MCP Server
 - **ReachyMini integration**: Camera, microphone, IMU sensor sources
 - **Config injection**: One `CortexConfig` wires all modules together
-- **Real-world validated**: 91% cognitive load reduction on 22h / 931 events of live data
+- **Real-world validated**: 91% cognitive load reduction on 22h / 932 events of live data
+- **Replay demo**: `python examples/replay_demo.py` — replays real daemon data through perception pipeline
 
 ---
 
