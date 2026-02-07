@@ -4,12 +4,7 @@
 Run:  python examples/demo.py
 """
 
-import sys
 import time
-from pathlib import Path
-
-# Add the directory *containing* the cortex package (i.e., TsubasaWorkspace)
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 
 from cortex import (
     CortexConfig,

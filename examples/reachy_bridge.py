@@ -16,16 +16,12 @@ Usage:
     python reachy_bridge.py
 """
 
-import sys
 import time
 import math
 import argparse
 from pathlib import Path
 from dataclasses import dataclass
 from typing import Optional, Tuple, List
-
-# Add cortex to path
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 
 from cortex import (
     CortexConfig, set_config,
