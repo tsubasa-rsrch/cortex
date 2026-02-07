@@ -471,7 +471,7 @@ pip install pytest
 python -m pytest tests/ -v
 ```
 
-134 tests, <0.6s. Core modules have zero external dependencies; MCP server requires `mcp` package.
+150 tests, <0.6s. Core modules have zero external dependencies; MCP server requires `mcp` package.
 
 ## Real-World Validation
 
