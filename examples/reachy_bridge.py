@@ -19,10 +19,10 @@ Usage:
 import sys
 import time
 import math
-import asyncio
+import argparse
 from pathlib import Path
 from dataclasses import dataclass
-from typing import Optional, Tuple
+from typing import Optional, Tuple, List
 
 # Add cortex to path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
@@ -33,6 +33,15 @@ from cortex import (
     DecisionEngine, Action, NotificationQueue, Event,
     TimestampLog,
 )
+
+# Optional: ReachyMini-specific sources (require numpy)
+try:
+    from cortex.sources.reachy import (
+        ReachyCameraSource, ReachyAudioSource, ReachyIMUSource,
+    )
+    HAS_REACHY_SOURCES = True
+except ImportError:
+    HAS_REACHY_SOURCES = False
 
 
 # --- Antenna Emotion Map ---
@@ -104,6 +113,8 @@ class ReachyCortexBridge:
             event_handlers={
                 "motion": self._handle_motion_event,
                 "voice":  self._handle_voice_event,
+                "audio":  self._handle_audio_event,
+                "imu":    self._handle_imu_event,
             }
         )
 
@@ -111,6 +122,9 @@ class ReachyCortexBridge:
         self.host = host
         self.mini = None
         self._current_expression = "neutral"
+
+        # Sensor sources (initialized after connection)
+        self.sources = []
 
     def connect(self):
         """Connect to ReachyMini daemon."""
@@ -135,6 +149,36 @@ class ReachyCortexBridge:
             print("  Is reachy-mini-daemon running?")
             print("  reachy-mini-daemon --mockup-sim --deactivate-audio --localhost-only")
             return False
+
+    def _init_sources(self):
+        """Initialize sensor sources after connection."""
+        if not self.mini or not HAS_REACHY_SOURCES:
+            return
+        try:
+            self.sources.append(ReachyCameraSource(self.mini))
+        except Exception:
+            pass
+        try:
+            self.sources.append(ReachyAudioSource(self.mini))
+        except Exception:
+            pass
+        try:
+            self.sources.append(ReachyIMUSource(self.mini))
+        except Exception:
+            pass
+        if self.sources:
+            names = [s.name for s in self.sources]
+            print(f"Sensor sources active: {', '.join(names)}")
+
+    def poll_sources(self) -> List[Event]:
+        """Poll all sensor sources and collect events."""
+        events = []
+        for source in self.sources:
+            try:
+                events.extend(source.check())
+            except Exception:
+                pass
+        return events
 
     def disconnect(self):
         """Gracefully shut down."""
@@ -210,8 +254,31 @@ class ReachyCortexBridge:
 
     def _handle_voice_event(self, event: Event) -> Action:
         """Handle voice/speech events."""
+        direction = event.raw_data.get("direction", "front")
+        look_target = {"front": "forward", "left": "left",
+                       "right": "right", "back": "forward"}.get(direction, "forward")
         return Action("listen", f"Heard: {event.content[:50]}",
-                      handler=lambda: self.set_expression("curious"))
+                      handler=lambda: (
+                          self.set_expression("curious"),
+                          self.look_at(look_target, duration=0.4),
+                      ))
+
+    def _handle_audio_event(self, event: Event) -> Action:
+        """Handle general sound events."""
+        rms = event.raw_data.get("rms_energy", 0)
+        if rms > 0.05:
+            return Action("alert_sound", f"Loud sound (rms={rms:.3f})",
+                          handler=lambda: self.set_expression("alert"))
+        return Action("ignore", "Background noise")
+
+    def _handle_imu_event(self, event: Event) -> Action:
+        """Handle IMU bump/movement events."""
+        delta = event.raw_data.get("delta", 0)
+        return Action("startle", f"Bumped! (delta={delta:.1f}g)",
+                      handler=lambda: (
+                          self.set_expression("alert"),
+                          self.flutter_antennas(cycles=2, speed=0.1),
+                      ))
 
     # --- Main Loop ---
 
@@ -314,9 +381,76 @@ class ReachyCortexBridge:
             self.disconnect()
 
 
+    def run_live(self, poll_interval: float = 0.5, circadian_interval: float = 300.0):
+        """Run live mode: continuous perception-action loop.
+
+        Polls sensor sources, processes events through Cortex,
+        and executes actions on the body in real time.
+
+        Args:
+            poll_interval: Seconds between sensor polls.
+            circadian_interval: Seconds between circadian updates.
+        """
+        if not self.connect():
+            return
+
+        self._init_sources()
+        self.log.start_task("live")
+
+        # Initial circadian expression
+        status = self.update_circadian_expression()
+        mode = status["mode"]
+        mode_name = mode.value if isinstance(mode, CircadianMode) else str(mode)
+        print(f"\n=== Cortex-ReachyMini Live Mode ===")
+        print(f"Circadian: {mode_name}")
+        print(f"Polling every {poll_interval}s | Ctrl+C to stop\n")
+
+        last_circadian = time.time()
+        event_count = 0
+        action_count = 0
+
+        try:
+            while True:
+                # Poll all sensor sources
+                events = self.poll_sources()
+
+                if events:
+                    event_count += len(events)
+                    action = self.process_events(events)
+                    if action.handler:
+                        action_count += 1
+
+                # Periodic circadian update
+                now = time.time()
+                if now - last_circadian > circadian_interval:
+                    self.update_circadian_expression()
+                    last_circadian = now
+
+                time.sleep(poll_interval)
+
+        except KeyboardInterrupt:
+            print("\n\nStopping live mode...")
+        finally:
+            result = self.log.end_task("live") or {}
+            elapsed = result.get("elapsed_min", 0)
+            print(f"\nLive session: {elapsed} min, {event_count} events, {action_count} actions")
+            self.disconnect()
+
+
 def main():
+    parser = argparse.ArgumentParser(description="Cortex-ReachyMini Bridge")
+    parser.add_argument("--live", action="store_true",
+                        help="Run in live mode (continuous perception-action loop)")
+    parser.add_argument("--interval", type=float, default=0.5,
+                        help="Sensor polling interval in seconds (default: 0.5)")
+    args = parser.parse_args()
+
     bridge = ReachyCortexBridge(host="localhost")
-    bridge.run_demo()
+
+    if args.live:
+        bridge.run_live(poll_interval=args.interval)
+    else:
+        bridge.run_demo()
 
 
 if __name__ == "__main__":
