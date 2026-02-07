@@ -7,6 +7,8 @@
 
 Cognitive-science-based perception framework for AI agents. Zero external dependencies, pure Python 3.10+.
 
+![Cortex Architecture](docs/architecture.png)
+
 Cortex gives your agent a **perception layer** — the cognitive mechanisms that decide *what* is worth paying attention to, *when* to act, and *how* to manage the flow of incoming information. Inspired by human neuroscience (habituation, circadian rhythms, orienting responses), built for practical agent architectures.
 
 ## Why Cortex?
@@ -373,6 +375,8 @@ GEMINI_API_KEY=your-key python examples/gemini_cognitive_agent.py
 ```
 
 ## Claude Code MCP Server
+
+![Tests & MCP Tools](docs/tests_mcp.png)
 
 Cortex includes a built-in MCP (Model Context Protocol) server that gives any Claude Code session real-time perception capabilities:
 
