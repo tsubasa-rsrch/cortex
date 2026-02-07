@@ -65,3 +65,44 @@ def test_action_execute_error():
     result = a.execute()
     assert result["status"] == "error"
     assert "boom" in result["error"]
+
+
+def test_priority_ordering():
+    """Higher priority events are processed first."""
+    de = DecisionEngine()
+    events = [
+        Event(source="low", type="info", content="Low priority", priority=1),
+        Event(source="high", type="alert", content="High priority", priority=10),
+        Event(source="mid", type="info", content="Mid priority", priority=5),
+    ]
+    action = de.decide(events)
+    assert "high" in action.description
+
+
+def test_action_default_params():
+    """Action params defaults to empty dict."""
+    a = Action("test", "desc")
+    assert a.params == {}
+
+
+def test_single_event():
+    """Single event is processed correctly."""
+    de = DecisionEngine()
+    events = [Event(source="cam", type="motion", content="Move!", priority=5)]
+    action = de.decide(events)
+    assert action.name == "process_event"
+    assert "cam" in action.description
+
+
+def test_handler_overrides_default():
+    """Custom handler overrides default event processing."""
+    calls = []
+    def handler(event):
+        calls.append(event)
+        return Action("handled", "Was handled")
+
+    de = DecisionEngine(event_handlers={"cam": handler})
+    events = [Event(source="cam", type="motion", content="test", priority=5)]
+    action = de.decide(events)
+    assert action.name == "handled"
+    assert len(calls) == 1

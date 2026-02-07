@@ -60,3 +60,57 @@ def test_custom_icons(tmp_path):
     nq.push("custom", "Custom type")
     output = nq.format()
     assert "X" in output
+
+
+def test_push_returns_notification(tmp_path):
+    """push() returns the notification dict."""
+    cfg = CortexConfig(data_dir=tmp_path, name="test")
+    nq = NotificationQueue(config=cfg)
+    n = nq.push("alert", "Fire!", priority="urgent")
+    assert n["type"] == "alert"
+    assert n["message"] == "Fire!"
+    assert n["priority"] == "urgent"
+    assert n["read"] is False
+    assert "timestamp" in n
+
+
+def test_push_with_data(tmp_path):
+    """push() stores extra data."""
+    cfg = CortexConfig(data_dir=tmp_path, name="test")
+    nq = NotificationQueue(config=cfg)
+    n = nq.push("info", "test", data={"key": "value"})
+    assert n["data"]["key"] == "value"
+
+
+def test_get_latest_empty(tmp_path):
+    """get_latest() returns None when no notifications."""
+    cfg = CortexConfig(data_dir=tmp_path, name="test")
+    nq = NotificationQueue(config=cfg)
+    assert nq.get_latest() is None
+
+
+def test_format_with_explicit_list(tmp_path):
+    """format() accepts explicit notification list."""
+    cfg = CortexConfig(data_dir=tmp_path, name="test")
+    nq = NotificationQueue(config=cfg)
+    notifs = [{"type": "info", "message": "Hello", "priority": "normal", "timestamp": "2026-01-01T12:00:00"}]
+    output = nq.format(notifs)
+    assert "Hello" in output
+
+
+def test_corrupt_queue_file(tmp_path):
+    """Corrupt queue file doesn't crash."""
+    cfg = CortexConfig(data_dir=tmp_path, name="test")
+    nq = NotificationQueue(config=cfg)
+    nq._queue_file.parent.mkdir(parents=True, exist_ok=True)
+    nq._queue_file.write_text("{not valid json!!!")
+    assert nq.get_unread() == []
+
+
+def test_corrupt_latest_file(tmp_path):
+    """Corrupt latest file returns None."""
+    cfg = CortexConfig(data_dir=tmp_path, name="test")
+    nq = NotificationQueue(config=cfg)
+    nq._latest_file.parent.mkdir(parents=True, exist_ok=True)
+    nq._latest_file.write_text("BROKEN")
+    assert nq.get_latest() is None

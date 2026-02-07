@@ -65,3 +65,55 @@ def test_orienting_bypasses_cooldown():
     ok, reason = h.should_notify("src", 35.0)  # orienting
     assert ok
     assert "Orienting" in reason
+
+
+def test_habituated_still_triggers_above_raised_threshold():
+    """After habituation, values above raised threshold still trigger."""
+    h = HabituationFilter(
+        base_threshold=10.0, cooldown=0, window=300.0,
+        habituate_count=3, habituated_mult=1.5, orienting_mult=3.0,
+    )
+    for _ in range(3):
+        h.should_notify("src", 15.0)
+    # Threshold is now 15.0 (habituated), orienting at 30.0
+    # Value 20.0 is above habituated threshold but below orienting
+    ok, reason = h.should_notify("src", 20.0)
+    assert ok
+    assert "habituated" in reason
+
+
+def test_exact_threshold_value():
+    """Value exactly at threshold triggers notification."""
+    h = HabituationFilter(base_threshold=10.0, cooldown=0)
+    ok, reason = h.should_notify("src", 10.0)
+    assert ok
+
+
+def test_exact_orienting_threshold():
+    """Value exactly at orienting threshold triggers."""
+    h = HabituationFilter(base_threshold=10.0, orienting_mult=2.0, cooldown=0)
+    ok, reason = h.should_notify("src", 20.0)
+    assert ok
+    assert "Orienting" in reason
+
+
+def test_history_is_recorded():
+    """Each call records to history."""
+    h = HabituationFilter(base_threshold=10.0, cooldown=0)
+    h.should_notify("src", 5.0)
+    h.should_notify("src", 5.0)
+    assert len(h.history["src"]) == 2
+
+
+def test_multiple_sources_isolate_habituation():
+    """Habituation on source A doesn't affect source B."""
+    h = HabituationFilter(
+        base_threshold=10.0, cooldown=0, habituate_count=3, habituated_mult=2.0,
+    )
+    for _ in range(3):
+        h.should_notify("A", 15.0)
+    # Source A is habituated, source B is not
+    ok_a, _ = h.should_notify("A", 15.0)
+    ok_b, _ = h.should_notify("B", 15.0)
+    assert not ok_a  # habituated, 15 < 20
+    assert ok_b  # fresh, 15 >= 10

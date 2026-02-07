@@ -28,3 +28,24 @@ def test_global_config(tmp_path):
     assert get_config().name == "global-test"
     # Reset
     set_config(CortexConfig())
+
+
+def test_data_dir_created_on_init(tmp_path):
+    """data_dir is created if it doesn't exist."""
+    new_dir = tmp_path / "brand_new"
+    assert not new_dir.exists()
+    cfg = CortexConfig(data_dir=new_dir)
+    assert new_dir.exists()
+
+
+def test_state_file_nested(tmp_path):
+    """state_file works with subdirectory paths."""
+    cfg = CortexConfig(data_dir=tmp_path)
+    path = cfg.state_file("sub/dir/file.json")
+    assert path == tmp_path / "sub" / "dir" / "file.json"
+
+
+def test_string_data_dir_converted(tmp_path):
+    """String data_dir is converted to Path."""
+    cfg = CortexConfig(data_dir=str(tmp_path), name="test")
+    assert isinstance(cfg.data_dir, Path)
