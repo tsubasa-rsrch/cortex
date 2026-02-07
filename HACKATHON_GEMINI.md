@@ -25,7 +25,7 @@ GEMINI_API_KEY=your-key python examples/gemini_cognitive_agent.py
 ## Submission Checklist
 
 - [x] Public GitHub repository
-- [x] Uses Gemini 3 API (gemini-3-flash)
+- [x] Uses Gemini 3 API (gemini-3-flash-preview)
 - [x] New application (built for this hackathon)
 - [x] README with setup instructions
 - [x] Demo script with mock + real API modes
