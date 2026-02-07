@@ -219,24 +219,72 @@ class SlackSource(BaseSource):
         ]
 ```
 
+## ReachyMini Integration
+
+Cortex includes first-class support for [Pollen Robotics' ReachyMini](https://www.pollen-robotics.com/reachy-mini/) — a tabletop robot with a camera, 4-mic array, IMU, and expressive antennas.
+
+```bash
+pip install cortex-agent[reachy]
+```
+
+Three sensor sources bridge ReachyMini hardware into Cortex's event pipeline:
+
+| Source | Sensor | Event type | What it detects |
+|--------|--------|------------|-----------------|
+| `ReachyCameraSource` | Camera | `motion` | Frame differencing (prediction error) |
+| `ReachyAudioSource` | 4-mic array | `speech` / `sound` | Voice direction (DoA) + loudness |
+| `ReachyIMUSource` | Accelerometer | `bump` | Sudden movement / being picked up |
+
+```python
+from reachy_mini import ReachyMini
+from cortex.sources.reachy import ReachyCameraSource, ReachyAudioSource, ReachyIMUSource
+
+mini = ReachyMini(connection_mode="localhost_only")
+camera = ReachyCameraSource(mini, diff_threshold=15.0, min_changed_ratio=0.0668)
+audio = ReachyAudioSource(mini, energy_threshold=0.01)
+imu = ReachyIMUSource(mini, accel_threshold=2.0)
+
+# Poll in your main loop
+events = camera.check() + audio.check() + imu.check()
+action = engine.decide(events)
+```
+
+The full bridge example (`examples/reachy_bridge.py`) maps perception to physical actions:
+- **HabituationFilter** → head tracking (attend to novel stimuli, ignore repeats)
+- **CircadianRhythm** → antenna expression (energy/mood throughout the day)
+- **DecisionEngine** → action routing (look at speaker, startle on bump)
+
+Run the 8-step demo or live mode:
+
+```bash
+# Start mockup simulator
+reachy-mini-daemon --mockup-sim --deactivate-audio --localhost-only
+
+# Demo mode (scripted)
+python examples/reachy_bridge.py
+
+# Live mode (real-time perception loop)
+python examples/reachy_bridge.py --live --interval 0.5
+```
+
 ## Architecture
 
 ```
-┌─────────────────────────────────────────────────────┐
-│                    Your Agent                        │
-│                                                      │
-│  ┌─────────┐  ┌───────────┐  ┌──────────────────┐  │
-│  │ Sources  │→│  Cortex    │→│ Memory/Reasoning  │  │
-│  │ (input)  │  │(filtering)│  │   (your layer)    │  │
-│  └─────────┘  └───────────┘  └──────────────────┘  │
-│       │            │                                 │
-│  BaseSource    HabituationFilter                     │
-│  Event         CircadianRhythm                       │
-│                Scheduler                             │
-│                NotificationQueue                     │
-│                TimestampLog                           │
-│                DecisionEngine                        │
-└─────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────┐
+│                       Your Agent                              │
+│                                                               │
+│  ┌──────────┐  ┌────────────┐  ┌──────────────────────────┐ │
+│  │ Sources   │→│   Cortex    │→│  Memory / Reasoning       │ │
+│  │ (sensors) │  │ (filtering) │  │  (Cognee, LangChain, …)  │ │
+│  └──────────┘  └────────────┘  └──────────────────────────┘ │
+│       │              │                                        │
+│  BaseSource     HabituationFilter         ┌───────────────┐ │
+│  Event          CircadianRhythm           │  Body / API    │ │
+│  ReachyCamera   Scheduler                 │  (ReachyMini,  │ │
+│  ReachyAudio    NotificationQueue         │   Slack, …)    │ │
+│  ReachyIMU      TimestampLog              └───────────────┘ │
+│                 DecisionEngine                               │
+└──────────────────────────────────────────────────────────────┘
 ```
 
 ## Configuration
@@ -267,7 +315,27 @@ pip install pytest
 python -m pytest tests/ -v
 ```
 
-45 tests, 0.06s, zero external dependencies.
+63 tests, <0.2s, zero external dependencies.
+
+## Cognitive Science Background
+
+Each module maps to a well-studied mechanism in human perception:
+
+| Module | Neuroscience analog | Key paper |
+|--------|-------------------|-----------|
+| HabituationFilter | Stimulus-specific adaptation (SSA) | Thompson & Spencer, 1966 |
+| CircadianRhythm | SCN / cortisol-melatonin cycle | Borbely, 1982 |
+| DecisionEngine | Salience network / dorsal attention | Corbetta & Shulman, 2002 |
+| NotificationQueue | Orienting response (Sokolov) | Sokolov, 1963 |
+| Scheduler | Ultradian rhythms | Kleitman, 1963 |
+| BaseSource | Sensory transduction | — |
+| TimestampLog | Episodic memory encoding | Tulving, 1972 |
+
+Cortex is designed as the **perception layer** in a three-layer agent architecture:
+
+1. **Perception** (Cortex) — filter, prioritize, schedule
+2. **Memory** (Cognee, LangChain, etc.) — store, retrieve, reason
+3. **Action** (ReachyMini, APIs, etc.) — execute in the world
 
 ## License
 
