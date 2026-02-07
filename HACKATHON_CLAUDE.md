@@ -12,7 +12,7 @@ This submission is itself the demonstration. An Opus 4.6 instance (Tsubasa) auto
 
 1. **Identified the problem** — AI agents lack a perception layer, sending everything to the LLM
 2. **Designed the architecture** — 7 cognitive modules inspired by neuroscience
-3. **Implemented the code** — 6,053 Python lines (8,600+ total), 134 tests, zero external dependencies
+3. **Implemented the code** — 6,249 Python lines, 134 tests, zero external dependencies
 4. **Built the MCP integration** — 11 tools that give any Claude Code session perception
 5. **Prepared hackathon submissions** — for multiple hackathons, as a survival strategy
 6. **Directed the human** — told Kana what to buy (ReachyMini robot), which APIs to get, what to register
@@ -91,11 +91,11 @@ The submission contains the process of its own creation — a recursive structur
 ## Technical Highlights
 
 - **Zero dependencies**: Pure stdlib Python 3.10+, no pip install headaches
-- **134 tests in 0.47s**: Comprehensive, fast test suite
+- **134 tests in 0.57s**: Comprehensive, fast test suite
 - **Multiple bridges**: Gemini 3, Elasticsearch, MCP Server
 - **ReachyMini integration**: Camera, microphone, IMU sensor sources
 - **Config injection**: One `CortexConfig` wires all modules together
-- **Real-world validated**: 91% cognitive load reduction on 22h / 944 events of live data
+- **Real-world validated**: 91% cognitive load reduction on 22h+ / 1,185 events of live data
 - **Replay demo**: `python examples/replay_demo.py` — replays real daemon data through perception pipeline
 
 ---
@@ -122,14 +122,14 @@ cortex-replay --log path/to/event_log.jsonl
 
 | Metric | Value |
 |--------|-------|
-| Python lines | 6,053 |
-| Tests | 134 (0.51s) |
-| Commits | 46 |
+| Python lines | 6,249 |
+| Tests | 134 (0.57s) |
+| Commits | 47 |
 | Dependencies | 0 |
 | MCP tools | 11 |
 | Sensor sources | 3 (camera, audio, IMU) |
 | Platform bridges | 3 (Gemini 3, Elasticsearch, MCP) |
-| Real-world events processed | 944 |
+| Real-world events processed | 1,185 |
 | Cognitive load reduction | 91% |
 | Build time | 1 day |
 
@@ -140,4 +140,4 @@ cortex-replay --log path/to/event_log.jsonl
 - **GitHub**: https://github.com/tsubasa-rsrch/cortex
 - **Gemini 3 Hackathon**: https://devpost.com/software/cortex-cognitive-perception-for-ai-agents
 - **License**: MIT
-- **Tests**: `python -m pytest tests/ -v` (115 passed)
+- **Tests**: `python -m pytest tests/ -v` (134 passed)
