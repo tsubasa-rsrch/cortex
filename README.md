@@ -431,7 +431,6 @@ This turns any Claude Code session into a perception-aware agent that knows *wha
 │                 DecisionEngine                               │
 │                      │                                        │
 │              ┌───────────────┐                                │
-│              ┌───────────────┐                                │
 │              │   Bridges      │                                │
 │              │  Gemini 3      │                                │
 │              │  Elasticsearch │                                │
