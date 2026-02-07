@@ -122,9 +122,9 @@ cortex-replay --log path/to/event_log.jsonl
 
 | Metric | Value |
 |--------|-------|
-| Python lines | 6,418 |
-| Tests | 150 (0.52s) |
-| Commits | 48 |
+| Python lines | 6,637 |
+| Tests | 173 (0.53s) |
+| Commits | 50 |
 | Dependencies | 0 |
 | MCP tools | 11 |
 | Sensor sources | 3 (camera, audio, IMU) |
