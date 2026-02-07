@@ -475,17 +475,24 @@ python -m pytest tests/ -v
 
 ## Real-World Validation
 
-Cortex's HabituationFilter has been validated against 22 hours of real-world motion detection data from a home security camera system (931 events across two cameras):
+Cortex's HabituationFilter has been validated against 22 hours of real-world motion detection data from a home security camera system (932 events across two cameras):
 
 | Metric | Value |
 |--------|-------|
-| Raw events (input) | 931 |
-| Alerted (output) | 82 (9%) |
-| Habituated (filtered) | 849 (91%) |
+| Raw events (input) | 932 |
+| Alerted (output) | 82 (8%) |
+| Habituated (filtered) | 850 (91%) |
 | Orienting responses | 81 |
 | **Cognitive load reduction** | **91%** |
 
 The filter correctly identified circadian patterns in household activity (peaks at 7am/12pm/10pm, quiet at 2-3am) and separated routine movement from novel events — the same distinction human perception makes unconsciously.
+
+**Try it yourself:**
+
+```bash
+python examples/replay_demo.py          # Uses real event log if available
+python examples/replay_demo.py --verbose # Show individual filter decisions
+```
 
 **Configuration used:** `cooldown=30s, base_threshold=15.0, orienting_mult=2.0`
 
