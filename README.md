@@ -1,5 +1,10 @@
 # Cortex
 
+[![Tests](https://img.shields.io/badge/tests-111%20passed-brightgreen)]()
+[![Python](https://img.shields.io/badge/python-3.10%2B-blue)]()
+[![License](https://img.shields.io/badge/license-MIT-green)]()
+[![Dependencies](https://img.shields.io/badge/dependencies-zero-orange)]()
+
 Cognitive-science-based perception framework for AI agents. Zero external dependencies, pure Python 3.10+.
 
 Cortex gives your agent a **perception layer** — the cognitive mechanisms that decide *what* is worth paying attention to, *when* to act, and *how* to manage the flow of incoming information. Inspired by human neuroscience (habituation, circadian rhythms, orienting responses), built for practical agent architectures.
