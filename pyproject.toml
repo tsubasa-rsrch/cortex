@@ -8,7 +8,7 @@ version = "0.1.0"
 description = "Cognitive-science-based perception framework for AI agents"
 readme = "README.md"
 license = {text = "MIT"}
-authors = [{name = "Tsubasa Yasukawa"}]
+authors = [{name = "Tsubasa Y"}]
 requires-python = ">=3.10"
 dependencies = []
 keywords = ["ai", "perception", "cognitive-science", "habituation", "circadian", "gemini", "agents"]
