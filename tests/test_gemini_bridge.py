@@ -70,7 +70,7 @@ def test_reason_mock_mode():
     assert result.reasoning != ""
     assert result.action != ""
     assert 0.0 <= result.confidence <= 1.0
-    assert result.model == "gemini-3-flash"
+    assert result.model == "gemini-3-flash-preview"
     assert bridge._api_calls == 1
 
 

@@ -323,7 +323,7 @@ bridge = CortexGeminiBridge()
 # Production mode
 bridge = CortexGeminiBridge(gemini_config=GeminiConfig(
     api_key="your-gemini-api-key",
-    model="gemini-3-flash",
+    model="gemini-3-flash-preview",
     mock_mode=False,
 ))
 

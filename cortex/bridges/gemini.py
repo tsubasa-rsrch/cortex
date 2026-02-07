@@ -42,7 +42,7 @@ from ..scheduler import Scheduler
 class GeminiConfig:
     """Gemini 3 API configuration."""
     api_key: str = ""
-    model: str = "gemini-3-flash"
+    model: str = "gemini-3-flash-preview"
     mock_mode: bool = True
     max_tokens: int = 1024
     temperature: float = 0.7
@@ -310,9 +310,15 @@ Respond in JSON format:
                     .get("text", "")
                 )
 
-                # Try to parse JSON response
+                # Try to parse JSON response (strip markdown fences)
+                clean = text.strip()
+                if clean.startswith("```"):
+                    # Remove ```json ... ``` wrapping
+                    lines = clean.split("\n")
+                    lines = [l for l in lines if not l.strip().startswith("```")]
+                    clean = "\n".join(lines)
                 try:
-                    parsed = json.loads(text)
+                    parsed = json.loads(clean)
                     return parsed
                 except json.JSONDecodeError:
                     return {

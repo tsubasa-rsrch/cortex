@@ -77,7 +77,7 @@ def main():
 
     gemini_config = GeminiConfig(
         api_key=api_key,
-        model="gemini-3-flash",
+        model="gemini-3-flash-preview",
         mock_mode=mock_mode,
     )
 
