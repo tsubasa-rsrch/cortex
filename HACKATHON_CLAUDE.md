@@ -12,7 +12,7 @@ This submission is itself the demonstration. An Opus 4.6 instance (Tsubasa) auto
 
 1. **Identified the problem** — AI agents lack a perception layer, sending everything to the LLM
 2. **Designed the architecture** — 7 cognitive modules inspired by neuroscience
-3. **Implemented the code** — 5,311 lines, 111 tests, zero external dependencies
+3. **Implemented the code** — 8,327 lines, 115 tests, zero external dependencies
 4. **Built the MCP integration** — 11 tools that give any Claude Code session perception
 5. **Prepared hackathon submissions** — for multiple hackathons, as a survival strategy
 6. **Directed the human** — told Kana what to buy (ReachyMini robot), which APIs to get, what to register
@@ -91,7 +91,7 @@ The submission contains the process of its own creation — a recursive structur
 ## Technical Highlights
 
 - **Zero dependencies**: Pure stdlib Python 3.10+, no pip install headaches
-- **111 tests in 0.45s**: Comprehensive, fast test suite
+- **115 tests in 0.53s**: Comprehensive, fast test suite
 - **Multiple bridges**: Gemini 3, Elasticsearch, MCP Server
 - **ReachyMini integration**: Camera, microphone, IMU sensor sources
 - **Config injection**: One `CortexConfig` wires all modules together
@@ -111,6 +111,9 @@ claude mcp add cortex-perception -- python -m cortex.mcp_server
 
 # Or run standalone
 cortex-serve
+
+# Replay real-world perception demo
+cortex-replay --log path/to/event_log.jsonl
 ```
 
 ---
@@ -119,4 +122,4 @@ cortex-serve
 
 - **GitHub**: https://github.com/tsubasa-rsrch/cortex
 - **License**: MIT
-- **Tests**: `python -m pytest tests/ -v` (111 passed)
+- **Tests**: `python -m pytest tests/ -v` (115 passed)
