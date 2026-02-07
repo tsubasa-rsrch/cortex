@@ -267,6 +267,49 @@ python examples/reachy_bridge.py
 python examples/reachy_bridge.py --live --interval 0.5
 ```
 
+## Platform Bridges
+
+Cortex bridges connect perception modules to external platforms. Events are filtered through cognitive mechanisms before reaching the target platform.
+
+### Elasticsearch Bridge
+
+Integrates Cortex with Elasticsearch for time-series event indexing and Agent Builder context injection:
+
+```python
+from cortex.bridges.elasticsearch import CortexElasticBridge, ESConfig
+
+# Mock mode (no ES cluster needed)
+bridge = CortexElasticBridge()
+
+# Production mode
+bridge = CortexElasticBridge(es_config=ESConfig(
+    es_url="https://your-cluster.es.io:443",
+    api_key="your-api-key",
+    index_prefix="cortex-events",
+    mock_mode=False,
+))
+
+# Filter and index an event (only novel stimuli pass through)
+from cortex import Event
+event = Event(source="camera", type="motion", content="Movement in lobby", priority=8,
+              raw_data={"diff": 25.0})
+result = bridge.index_event(event)  # Returns IndexedEvent or None
+
+# Build Agent Builder context with circadian awareness
+context = bridge.get_agent_context()
+prompt = bridge.build_agent_system_prompt("You are a security agent.")
+```
+
+**Integration points:**
+
+| Cortex Module | ES Integration | What it does |
+|---------------|---------------|--------------|
+| HabituationFilter | Event ingestion | Only index novel stimuli |
+| CircadianRhythm | Agent behavior | Adjust system prompts by time of day |
+| DecisionEngine | Tool selection | Pre-filter Agent Builder tools |
+| NotificationQueue | Conversation context | Inject background events |
+| Scheduler | ES\|QL jobs | Periodic health checks and reports |
+
 ## Architecture
 
 ```
@@ -277,13 +320,19 @@ python examples/reachy_bridge.py --live --interval 0.5
 │  │ Sources   │→│   Cortex    │→│  Memory / Reasoning       │ │
 │  │ (sensors) │  │ (filtering) │  │  (Cognee, LangChain, …)  │ │
 │  └──────────┘  └────────────┘  └──────────────────────────┘ │
-│       │              │                                        │
-│  BaseSource     HabituationFilter         ┌───────────────┐ │
-│  Event          CircadianRhythm           │  Body / API    │ │
-│  ReachyCamera   Scheduler                 │  (ReachyMini,  │ │
-│  ReachyAudio    NotificationQueue         │   Slack, …)    │ │
-│  ReachyIMU      TimestampLog              └───────────────┘ │
+│       │              │                    │                    │
+│  BaseSource     HabituationFilter    ┌───────────────┐      │
+│  Event          CircadianRhythm      │  Body / API    │      │
+│  ReachyCamera   Scheduler            │  (ReachyMini,  │      │
+│  ReachyAudio    NotificationQueue    │   Slack, …)    │      │
+│  ReachyIMU      TimestampLog         └───────────────┘      │
 │                 DecisionEngine                               │
+│                      │                                        │
+│              ┌───────────────┐                                │
+│              │   Bridges      │                                │
+│              │  Elasticsearch │                                │
+│              │  (more coming) │                                │
+│              └───────────────┘                                │
 └──────────────────────────────────────────────────────────────┘
 ```
 
@@ -315,7 +364,7 @@ pip install pytest
 python -m pytest tests/ -v
 ```
 
-63 tests, <0.2s, zero external dependencies.
+77 tests, <0.2s, zero external dependencies.
 
 ## Cognitive Science Background
 
