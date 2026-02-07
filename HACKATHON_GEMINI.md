@@ -6,7 +6,7 @@
 
 The architecture mirrors human cognition: Cortex acts as the thalamus (unconscious filtering), while Gemini 3 serves as the prefrontal cortex (conscious reasoning). Events pass through a habituation filter that learns to ignore repeated stimuli, a circadian module that adjusts vigilance by time of day, and a decision engine that routes events by priority — all before a single API call is made.
 
-Built entirely in Python with zero external dependencies (stdlib-only), Cortex includes 7 cognitive modules, 111 tests, and bridges for Gemini 3, Elasticsearch, and MCP. The Gemini 3 bridge provides a complete perceive-reason-act pipeline with mock mode for testing and real API integration for production.
+Built entirely in Python with zero external dependencies (stdlib-only), Cortex includes 7 cognitive modules, 115 tests, and bridges for Gemini 3, Elasticsearch, and MCP. The Gemini 3 bridge provides a complete perceive-reason-act pipeline with mock mode for testing and real API integration for production.
 
 Inspired by Thompson & Spencer (1966) on habituation, Borbely (1982) on circadian rhythms, and Corbetta & Shulman (2002) on salience networks.
 
@@ -38,6 +38,6 @@ GEMINI_API_KEY=your-key python examples/gemini_cognitive_agent.py
 1. **Cognitive Science Foundation**: Not just "filter by rules" — uses actual neuroscience mechanisms (habituation, circadian, orienting response)
 2. **60-80% API Savings**: Most events are noise. Cortex filters before calling Gemini 3
 3. **Zero Dependencies**: Pure stdlib Python, works anywhere
-4. **111 Tests**: Well-tested, production-ready
+4. **115 Tests**: Well-tested, production-ready
 5. **Multiple Bridges**: Gemini 3 + Elasticsearch + MCP Server
 6. **ReachyMini Integration**: Physical robot body with camera, mic, IMU sensors
