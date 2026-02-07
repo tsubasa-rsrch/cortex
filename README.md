@@ -310,6 +310,46 @@ prompt = bridge.build_agent_system_prompt("You are a security agent.")
 | NotificationQueue | Conversation context | Inject background events |
 | Scheduler | ES\|QL jobs | Periodic health checks and reports |
 
+## Claude Code MCP Server
+
+Cortex includes a built-in MCP (Model Context Protocol) server that gives any Claude Code session real-time perception capabilities:
+
+```bash
+# Install
+pip install cortex-agent
+
+# Add to Claude Code
+claude mcp add cortex-perception -- python -m cortex.mcp_server
+```
+
+Or add to `.mcp.json`:
+
+```json
+{
+    "mcpServers": {
+        "cortex-perception": {
+            "command": "python3",
+            "args": ["-m", "cortex.mcp_server"]
+        }
+    }
+}
+```
+
+**Available tools:**
+
+| Tool | What it does |
+|------|-------------|
+| `cortex_perception_summary` | Full status: circadian mode, notifications, tasks, schedule |
+| `cortex_check_habituation` | Filter noise — only alert on novel/significant stimuli |
+| `cortex_circadian_status` | Time-of-day awareness with activity suggestions |
+| `cortex_push_notification` | Queue notifications by urgency |
+| `cortex_get_notifications` | Retrieve and manage notification queue |
+| `cortex_decide` | Route events to actions via salience network |
+| `cortex_start_task` / `cortex_checkpoint` / `cortex_end_task` | Track task timing |
+| `cortex_schedule` / `cortex_check_schedule` | Register and check periodic tasks |
+
+This turns any Claude Code session into a perception-aware agent that knows *what* to pay attention to and *when* to act.
+
 ## Architecture
 
 ```
@@ -329,9 +369,10 @@ prompt = bridge.build_agent_system_prompt("You are a security agent.")
 │                 DecisionEngine                               │
 │                      │                                        │
 │              ┌───────────────┐                                │
+│              ┌───────────────┐                                │
 │              │   Bridges      │                                │
 │              │  Elasticsearch │                                │
-│              │  (more coming) │                                │
+│              │  MCP Server    │                                │
 │              └───────────────┘                                │
 └──────────────────────────────────────────────────────────────┘
 ```
@@ -364,7 +405,7 @@ pip install pytest
 python -m pytest tests/ -v
 ```
 
-77 tests, <0.2s, zero external dependencies.
+94 tests, <0.5s. Core modules have zero external dependencies; MCP server requires `mcp` package.
 
 ## Cognitive Science Background
 
