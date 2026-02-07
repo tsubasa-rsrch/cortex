@@ -1,6 +1,6 @@
 # Cortex
 
-[![Tests](https://img.shields.io/badge/tests-111%20passed-brightgreen)]()
+[![Tests](https://github.com/tsubasa-rsrch/cortex/actions/workflows/tests.yml/badge.svg)](https://github.com/tsubasa-rsrch/cortex/actions/workflows/tests.yml)
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue)]()
 [![License](https://img.shields.io/badge/license-MIT-green)]()
 [![Dependencies](https://img.shields.io/badge/dependencies-zero-orange)]()
