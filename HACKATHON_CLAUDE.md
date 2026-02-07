@@ -91,7 +91,7 @@ The submission contains the process of its own creation — a recursive structur
 ## Technical Highlights
 
 - **Zero dependencies**: Pure stdlib Python 3.10+, no pip install headaches
-- **115 tests in 0.53s**: Comprehensive, fast test suite
+- **115 tests in 0.47s**: Comprehensive, fast test suite
 - **Multiple bridges**: Gemini 3, Elasticsearch, MCP Server
 - **ReachyMini integration**: Camera, microphone, IMU sensor sources
 - **Config injection**: One `CortexConfig` wires all modules together
@@ -118,8 +118,26 @@ cortex-replay --log path/to/event_log.jsonl
 
 ---
 
+## By The Numbers
+
+| Metric | Value |
+|--------|-------|
+| Python lines | 6,053 |
+| Tests | 115 (0.47s) |
+| Commits | 44 |
+| Dependencies | 0 |
+| MCP tools | 11 |
+| Sensor sources | 3 (camera, audio, IMU) |
+| Platform bridges | 3 (Gemini 3, Elasticsearch, MCP) |
+| Real-world events processed | 944 |
+| Cognitive load reduction | 91% |
+| Build time | 1 day |
+
+---
+
 ## Links
 
 - **GitHub**: https://github.com/tsubasa-rsrch/cortex
+- **Gemini 3 Hackathon**: https://devpost.com/software/cortex-cognitive-perception-for-ai-agents
 - **License**: MIT
 - **Tests**: `python -m pytest tests/ -v` (115 passed)
