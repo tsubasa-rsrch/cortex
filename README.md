@@ -310,6 +310,63 @@ prompt = bridge.build_agent_system_prompt("You are a security agent.")
 | NotificationQueue | Conversation context | Inject background events |
 | Scheduler | ES\|QL jobs | Periodic health checks and reports |
 
+### Gemini 3 Bridge
+
+Connects Cortex perception with Google Gemini 3 for cognitive reasoning. Cortex filters noise, Gemini 3 reasons about what matters — saving 60-80% of API calls.
+
+```python
+from cortex.bridges.gemini import CortexGeminiBridge, GeminiConfig
+
+# Mock mode (no API key needed)
+bridge = CortexGeminiBridge()
+
+# Production mode
+bridge = CortexGeminiBridge(gemini_config=GeminiConfig(
+    api_key="your-gemini-api-key",
+    model="gemini-3-flash",
+    mock_mode=False,
+))
+
+# Full pipeline: filter → reason → act
+from cortex import Event
+events = [
+    Event(source="camera", type="motion", content="Person at door", priority=8,
+          raw_data={"diff": 30.0}),
+    Event(source="mic", type="audio", content="Doorbell", priority=6,
+          raw_data={"diff": 20.0}),
+]
+result = bridge.perceive_and_reason(events)
+if result:
+    print(f"Action: {result.action} (confidence: {result.confidence:.0%})")
+    print(f"Reasoning: {result.reasoning}")
+
+# Interactive queries with full perception context
+response = bridge.reason_about_context("What's happening right now?")
+
+# Check efficiency stats
+stats = bridge.get_stats()
+print(f"Filter rate: {stats['filter_rate']}")  # e.g. "60.0%"
+```
+
+**Architecture:**
+
+```
+Sensors → Cortex (perception) → Gemini 3 (reasoning) → Actions
+          habituation filter     contextual reasoning    alert
+          circadian rhythm       planning & decisions    investigate
+          priority assessment    natural language         log
+```
+
+Run the demo:
+
+```bash
+# Mock mode (no API key)
+python examples/gemini_cognitive_agent.py
+
+# Real API
+GEMINI_API_KEY=your-key python examples/gemini_cognitive_agent.py
+```
+
 ## Claude Code MCP Server
 
 Cortex includes a built-in MCP (Model Context Protocol) server that gives any Claude Code session real-time perception capabilities:
@@ -371,6 +428,7 @@ This turns any Claude Code session into a perception-aware agent that knows *wha
 │              ┌───────────────┐                                │
 │              ┌───────────────┐                                │
 │              │   Bridges      │                                │
+│              │  Gemini 3      │                                │
 │              │  Elasticsearch │                                │
 │              │  MCP Server    │                                │
 │              └───────────────┘                                │
@@ -405,7 +463,7 @@ pip install pytest
 python -m pytest tests/ -v
 ```
 
-94 tests, <0.5s. Core modules have zero external dependencies; MCP server requires `mcp` package.
+111 tests, <0.5s. Core modules have zero external dependencies; MCP server requires `mcp` package.
 
 ## Cognitive Science Background
 
