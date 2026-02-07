@@ -1,0 +1,8 @@
+{
+    "mcpServers": {
+        "cortex-perception": {
+            "command": "python3",
+            "args": ["-m", "cortex.mcp_server"]
+        }
+    }
+}
