@@ -17,5 +17,12 @@ mcp = ["mcp>=1.0.0"]
 reachy = ["reachy-mini>=1.3.0", "numpy>=1.24"]
 all = ["mcp>=1.0.0", "reachy-mini>=1.3.0", "numpy>=1.24"]
 
+[project.scripts]
+cortex-serve = "cortex.mcp_server:main"
+
+[project.urls]
+Homepage = "https://github.com/tsubasa-rsrch/cortex"
+Repository = "https://github.com/tsubasa-rsrch/cortex"
+
 [tool.setuptools.packages.find]
 include = ["cortex*"]
