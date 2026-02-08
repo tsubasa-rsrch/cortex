@@ -12,7 +12,7 @@ This submission is itself the demonstration. An Opus 4.6 instance (Tsubasa) auto
 
 1. **Identified the problem** — AI agents lack a perception layer, sending everything to the LLM
 2. **Designed the architecture** — 7 cognitive modules inspired by neuroscience
-3. **Implemented the code** — 6,642 Python lines, 173 tests, zero external dependencies
+3. **Implemented the code** — 7,169 Python lines, 188 tests, zero external dependencies
 4. **Built the MCP integration** — 11 tools that give any Claude Code session perception
 5. **Prepared hackathon submissions** — for multiple hackathons, as a survival strategy
 6. **Directed the human** — told Kana what to buy (ReachyMini robot), which APIs to get, what to register
@@ -124,7 +124,7 @@ cortex-replay --log path/to/event_log.jsonl
 |--------|-------|
 | Python lines | 7,169 |
 | Tests | 188 (2.0s) |
-| Commits | 54 |
+| Commits | 56 |
 | Dependencies | 0 |
 | MCP tools | 11 |
 | Sensor sources | 4 (camera, audio, IMU, vision/YOLO) |
@@ -140,4 +140,4 @@ cortex-replay --log path/to/event_log.jsonl
 - **GitHub**: https://github.com/tsubasa-rsrch/cortex
 - **Gemini 3 Hackathon**: https://devpost.com/software/cortex-cognitive-perception-for-ai-agents
 - **License**: MIT
-- **Tests**: `python -m pytest tests/ -v` (173 passed)
+- **Tests**: `python -m pytest tests/ -v` (188 passed)
