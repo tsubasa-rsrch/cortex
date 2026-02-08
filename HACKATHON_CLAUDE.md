@@ -91,11 +91,11 @@ The submission contains the process of its own creation — a recursive structur
 ## Technical Highlights
 
 - **Zero dependencies**: Pure stdlib Python 3.10+, no pip install headaches
-- **173 tests in 0.65s**: Comprehensive, fast test suite
+- **188 tests in 2.6s**: Comprehensive, fast test suite
 - **Multiple bridges**: Gemini 3, Elasticsearch, MCP Server
 - **ReachyMini integration**: Camera, microphone, IMU sensor sources
 - **Config injection**: One `CortexConfig` wires all modules together
-- **Real-world validated**: 91% cognitive load reduction on 22h+ / 1,185 events of live data
+- **Real-world validated**: 91% cognitive load reduction on 48h+ / 2,200+ events of live data
 - **Replay demo**: `python examples/replay_demo.py` — replays real daemon data through perception pipeline
 
 ---
@@ -123,15 +123,15 @@ cortex-replay --log path/to/event_log.jsonl
 | Metric | Value |
 |--------|-------|
 | Python lines | 7,169 |
-| Tests | 188 (2.0s) |
-| Commits | 58 |
+| Tests | 188 (2.6s) |
+| Commits | 60 |
 | Dependencies | 0 |
 | MCP tools | 11 |
 | Sensor sources | 4 (camera, audio, IMU, vision/YOLO) |
 | Platform bridges | 3 (Gemini 3, Elasticsearch, MCP) |
 | Real-world events processed | 2,200+ |
 | Cognitive load reduction | 91% |
-| Build time | 1 day |
+| Build time | 2 days |
 
 ---
 
