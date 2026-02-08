@@ -39,6 +39,13 @@ try:
 except ImportError:
     HAS_REACHY_SOURCES = False
 
+# Optional: Vision source with YOLO classification
+try:
+    from cortex.sources.vision import VisionSource
+    HAS_VISION = True
+except ImportError:
+    HAS_VISION = False
+
 
 # --- Antenna Emotion Map ---
 # Maps emotional/cognitive states to antenna positions [left, right]
@@ -162,6 +169,11 @@ class ReachyCortexBridge:
             self.sources.append(ReachyIMUSource(self.mini))
         except Exception:
             pass
+        if HAS_VISION:
+            try:
+                self.sources.append(VisionSource(self.mini.media.get_frame))
+            except Exception:
+                pass
         if self.sources:
             names = [s.name for s in self.sources]
             print(f"Sensor sources active: {', '.join(names)}")
