@@ -122,12 +122,12 @@ cortex-replay --log path/to/event_log.jsonl
 
 | Metric | Value |
 |--------|-------|
-| Python lines | 6,642 |
-| Tests | 173 (0.61s) |
-| Commits | 53 |
+| Python lines | 7,169 |
+| Tests | 188 (2.0s) |
+| Commits | 54 |
 | Dependencies | 0 |
 | MCP tools | 11 |
-| Sensor sources | 3 (camera, audio, IMU) |
+| Sensor sources | 4 (camera, audio, IMU, vision/YOLO) |
 | Platform bridges | 3 (Gemini 3, Elasticsearch, MCP) |
 | Real-world events processed | 1,185 |
 | Cognitive load reduction | 91% |

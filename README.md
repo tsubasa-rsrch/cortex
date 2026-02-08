@@ -234,25 +234,28 @@ Cortex includes first-class support for [Pollen Robotics' ReachyMini](https://ww
 pip install cortex-agent[reachy]
 ```
 
-Three sensor sources bridge ReachyMini hardware into Cortex's event pipeline:
+Four sensor sources bridge ReachyMini hardware into Cortex's event pipeline:
 
 | Source | Sensor | Event type | What it detects |
 |--------|--------|------------|-----------------|
 | `ReachyCameraSource` | Camera | `motion` | Frame differencing (prediction error) |
 | `ReachyAudioSource` | 4-mic array | `speech` / `sound` | Voice direction (DoA) + loudness |
 | `ReachyIMUSource` | Accelerometer | `bump` | Sudden movement / being picked up |
+| `VisionSource` | Camera + YOLO | `person` / `animal` / `motion` | Object classification (optional YOLO) |
 
 ```python
 from reachy_mini import ReachyMini
 from cortex.sources.reachy import ReachyCameraSource, ReachyAudioSource, ReachyIMUSource
+from cortex.sources.vision import VisionSource
 
 mini = ReachyMini(connection_mode="localhost_only")
 camera = ReachyCameraSource(mini, diff_threshold=15.0, min_changed_ratio=0.0668)
 audio = ReachyAudioSource(mini, energy_threshold=0.01)
 imu = ReachyIMUSource(mini, accel_threshold=2.0)
+vision = VisionSource(mini.media.get_frame)  # optional YOLO classification
 
 # Poll in your main loop
-events = camera.check() + audio.check() + imu.check()
+events = camera.check() + audio.check() + imu.check() + vision.check()
 action = engine.decide(events)
 ```
 
