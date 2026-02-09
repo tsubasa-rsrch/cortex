@@ -60,6 +60,7 @@ class CosmosConfig:
     temperature: float = 0.3
     n_gpu_layers: int = -1  # -1 = offload all to Metal
     ctx_size: int = 8192
+    model_name: str = "cosmos-reason2-8b"  # or "qwen3-vl-2b" etc.
 
 
 @dataclass
@@ -229,7 +230,7 @@ class CortexCosmosBridge:
             confidence=response.get("confidence", 0.5),
             scene_description=response.get("scene_description", ""),
             events_analyzed=len(self._perceived_events),
-            model="cosmos-reason2-8b",
+            model=self.config.model_name,
             latency_ms=latency,
             has_image=has_image,
         )
@@ -421,7 +422,7 @@ class CortexCosmosBridge:
             ),
             "reasoning_history": len(self._reasoning_history),
             "mock_mode": self.config.mock_mode,
-            "model": "cosmos-reason2-8b",
+            "model": self.config.model_name,
             "server_url": self.server_url,
             "circadian_mode": self.circadian.current_mode.value,
         }
