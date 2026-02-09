@@ -67,10 +67,11 @@ def test_reason_about_scene_motion():
 
 def test_reason_about_scene_with_image():
     bridge = CortexCosmosBridge()
-    # Create a tiny test image
-    with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as f:
-        f.write(b"\xff\xd8\xff\xe0" + b"\x00" * 100)  # minimal JPEG-ish
-        tmp_path = f.name
+    # Create a valid tiny test image using PIL
+    from PIL import Image
+    tmp_path = tempfile.mktemp(suffix=".jpg")
+    img = Image.new("RGB", (4, 4), color=(128, 128, 128))
+    img.save(tmp_path, format="JPEG")
 
     try:
         result = bridge.reason_about_scene("What do I see?", image_path=tmp_path)

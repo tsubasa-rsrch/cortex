@@ -61,6 +61,7 @@ class CosmosConfig:
     n_gpu_layers: int = -1  # -1 = offload all to Metal
     ctx_size: int = 8192
     model_name: str = "cosmos-reason2-8b"  # or "qwen3-vl-2b" etc.
+    max_image_dim: int = 384  # resize images to fit ctx_size
 
 
 @dataclass
@@ -274,10 +275,26 @@ class CortexCosmosBridge:
         return result
 
     def _encode_image(self, image_path: str) -> Optional[str]:
-        """Encode image to base64 for API."""
+        """Encode and resize image to base64 for API.
+
+        Resizes to max_image_dim to fit within ctx_size constraints.
+        Tapo cameras capture at 2880x1620 which exceeds 4096 ctx_size.
+        """
         try:
-            with open(image_path, "rb") as f:
-                return base64.b64encode(f.read()).decode("utf-8")
+            import io
+            from PIL import Image
+            img = Image.open(image_path)
+            img.thumbnail((self.config.max_image_dim, self.config.max_image_dim))
+            buf = io.BytesIO()
+            img.save(buf, format="JPEG", quality=80)
+            return base64.b64encode(buf.getvalue()).decode("utf-8")
+        except ImportError:
+            # Fallback: send raw if PIL not available
+            try:
+                with open(image_path, "rb") as f:
+                    return base64.b64encode(f.read()).decode("utf-8")
+            except Exception:
+                return None
         except Exception:
             return None
 

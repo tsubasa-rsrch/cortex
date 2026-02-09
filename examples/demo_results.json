@@ -1,0 +1,39 @@
+{
+  "timestamp": "2026-02-09T17:49:42.003042",
+  "model": "qwen3-vl-2b-q4_k_m",
+  "hardware": "Apple M2, 8GB",
+  "results": [
+    {
+      "scenario": "Evening bedroom scene",
+      "time": "21:02 EST",
+      "image": "c230_1902.jpg",
+      "question": "Looking at what's in front of me right now, what do I see? Is anyone here? What are they doing?",
+      "response": "Based on the image, I see a bedroom from a first-person perspective. In front of me, the bed is in the foreground, and it's covered in a rumpled white comforter. To the right, there's a large, bright lamp with a white lampshade that's turned on, casting light on the bed and the surrounding area. The lamp's cord is visible, hanging down from the lamp.\n\nIn the background, I can see a doorway leading to another room. There's a person standing near the doorway, but they are out of focus and their features are not clear. The person appears to be standing still, possibly looking at something in the room. The room is dimly lit, and there are some items on the floor, including what looks like a small box or a piece of furniture. The overall scene is quiet and still, with no signs of movement or interaction from anyone visible in the image.",
+      "latency_ms": 3556
+    },
+    {
+      "scenario": "Evening kitchen scene",
+      "time": "21:02 EST",
+      "image": "c260_1902.jpg",
+      "question": "From my perspective in the kitchen, who is here and what is happening?",
+      "response": "I'm in the kitchen, looking out the window at the living room. I see a person sitting on the couch, watching TV. They're wearing a dark-colored shirt and are focused on the screen. I can see a black cat sitting on the couch near them. The person is not interacting with me, but I can see they're watching the TV. The cat is just sitting there, not moving. I'm not sure if the person wants to interact with me, but I can see they're not doing anything right now.",
+      "latency_ms": 1954
+    },
+    {
+      "scenario": "Afternoon bedroom scene",
+      "time": "13:07 EST",
+      "image": "c230_20260206_130723.jpg",
+      "question": "I just detected motion. Looking at my view, is someone here? Should I engage or continue observing?",
+      "response": "Based on the image, I see a person in the background, but they are not directly in the frame. They are standing in the doorway of the bedroom, and their presence is indicated by the motion detected. The person is likely standing in the room, possibly near the closet, and they are not interacting with me. I should continue observing, as the person is not engaging with me, but they are still in the room.",
+      "latency_ms": 1660
+    },
+    {
+      "scenario": "Afternoon kitchen scene",
+      "time": "13:07 EST",
+      "image": "c260_20260206_130748.jpg",
+      "question": "My kitchen camera detected activity. What do I see from this angle? Any social interaction happening?",
+      "response": "Based on the image from the camera's perspective, I can see the following:\n\n- The camera is positioned in a kitchen, looking out into a large, open living area.\n- In the background, there's a living room area with a stone pillar, a large window, and a glass door.\n- A person is visible in the living room, sitting on a couch. They appear to be looking at something on a table, possibly a laptop or a tablet.\n- The person is wearing a light-colored shirt and seems to be focused on their device.\n- The overall scene is calm, with no signs of social interaction happening at this moment. The person is not interacting with the camera or with anyone else visible in the frame.\n\nThe camera is currently focused on the person in the living room, and there is no indication of any social interaction occurring.",
+      "latency_ms": 2920
+    }
+  ]
+}
