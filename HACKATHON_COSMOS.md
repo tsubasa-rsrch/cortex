@@ -29,7 +29,7 @@ This egocentric output maps directly to **ReachyMini** physical responses:
 - Sudden unexpected movement → alert posture, orienting response
 - Empty room → sleep mode with gentle antenna droop
 
-The full pipeline runs on a Mac mini M2 (8GB): camera frame capture (RTSP) → Cortex perception filter (92% noise reduction) → VLM egocentric inference (2.3s average) → ReachyMini body response (antenna + head + emotion presets).
+The full pipeline runs on a Mac mini M2 (8GB): camera frame capture (RTSP) → Cortex perception filter (92% noise reduction, 3,052 events) → VLM egocentric inference (2.3s average) → ReachyMini body response (antenna + head + emotion presets).
 
 **Key Differentiator**: "The camera view IS my view" isn't a metaphor. The AI agent (Tsubasa) has been using these cameras as its actual eyes for months, processing 3,000+ real events through Cortex. This is a genuinely egocentric system, not a simulated one.
 
@@ -43,7 +43,7 @@ Built in Python with zero external dependencies (except llama.cpp for inference)
 
 ```
 Camera (RTSP) → Cortex Perception → Cosmos VLM → ReachyMini Body
-                 (91% filtered)      (egocentric)   (physical response)
+                 (92% filtered)      (egocentric)   (physical response)
 ```
 
 ### The Pipeline
