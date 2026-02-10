@@ -120,7 +120,7 @@ claude mcp add cortex-perception -- python -m cortex.mcp_server
 - **Multiple bridges**: Gemini 3, Elasticsearch, Cosmos VLM, MCP Server
 - **ReachyMini integration**: Camera, microphone, IMU sensor sources
 - **Config injection**: One `CortexConfig` wires all modules together
-- **Real-world validated**: 91% cognitive load reduction on 48h+ / 2,200+ events of live data
+- **Real-world validated**: 92% cognitive load reduction on 96h+ / 3,052 events of live data
 - **Replay demo**: `python examples/replay_demo.py` — replays real daemon data through perception pipeline
 
 ---
@@ -154,8 +154,8 @@ cortex-replay --log path/to/event_log.jsonl
 | MCP tools | 11 |
 | Sensor sources | 4 (camera, audio, IMU, vision/YOLO) |
 | Platform bridges | 4 (Gemini 3, Elasticsearch, Cosmos VLM, MCP) |
-| Real-world events processed | 2,200+ |
-| Cognitive load reduction | 91% |
+| Real-world events processed | 3,052 |
+| Cognitive load reduction | 92% |
 | Build time | 2 days |
 
 ---

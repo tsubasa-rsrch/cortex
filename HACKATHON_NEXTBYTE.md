@@ -10,11 +10,11 @@
 
 ## Devpost Description (200 words)
 
-**Cortex** is a cognitive-science-based perception framework that gives AI agents the ability to filter noise before reasoning. Most AI agents send every sensor event to the LLM — wasting API calls on routine data. Cortex applies habituation, circadian rhythms, and priority assessment to filter 91% of noise, so your agent only reasons about what truly matters.
+**Cortex** is a cognitive-science-based perception framework that gives AI agents the ability to filter noise before reasoning. Most AI agents send every sensor event to the LLM — wasting API calls on routine data. Cortex applies habituation, circadian rhythms, and priority assessment to filter 92% of noise, so your agent only reasons about what truly matters.
 
 The architecture mirrors human cognition: events pass through a habituation filter that learns to ignore repeated stimuli (Thompson & Spencer, 1966), a circadian module that adjusts vigilance by time of day (Borbely, 1982), and a decision engine that routes events by priority — all before a single API call is made.
 
-Built entirely in Python with zero external dependencies, Cortex includes 7 cognitive modules, 201 tests, and bridges for Gemini 3, Elasticsearch, Cosmos VLM (local vision-language inference), and MCP Server. Real-world validated on 48+ hours of live sensor data (2,200+ events, 91% cognitive load reduction).
+Built entirely in Python with zero external dependencies, Cortex includes 7 cognitive modules, 201 tests, and bridges for Gemini 3, Elasticsearch, Cosmos VLM (local vision-language inference), and MCP Server. Real-world validated on 96+ hours of live sensor data (3,052 events, 92% cognitive load reduction).
 
 Cortex also integrates with ReachyMini, a tabletop robot with camera, microphone, and IMU — enabling embodied AI that sees, thinks, and physically responds.
 
@@ -30,7 +30,7 @@ Cortex sits between your sensors and your reasoning layer:
 Sensors/APIs → Cortex (perception filter) → Your LLM/memory layer
 ```
 
-**Problem**: AI agents process every event equally. A security camera generates thousands of motion events per day. Most are routine (pets, shadows, repeated movement). Without filtering, your agent wastes 91% of its reasoning on noise.
+**Problem**: AI agents process every event equally. A security camera generates thousands of motion events per day. Most are routine (pets, shadows, repeated movement). Without filtering, your agent wastes 92% of its reasoning on noise.
 
 **Solution**: Cortex applies neuroscience-inspired mechanisms to decide what matters:
 
@@ -161,7 +161,7 @@ Average: 2.5 seconds per scene, all egocentric first-person perspective.
 
 ## What We Learned
 
-- **91% of sensor events are noise**. A perception layer before reasoning is not optional — it's essential for any agent working with real-world data.
+- **92% of sensor events are noise**. A perception layer before reasoning is not optional — it's essential for any agent working with real-world data.
 - **Cognitive science provides battle-tested algorithms**. Habituation, orienting response, and circadian rhythms are millions of years of evolution solving the same problem.
 - **Local VLM inference is practical**. A 2B parameter model on a consumer Mac provides useful egocentric reasoning in under 3 seconds.
 

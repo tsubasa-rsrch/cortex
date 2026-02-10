@@ -51,7 +51,7 @@ Camera (RTSP) → Cortex Perception → Cosmos VLM → ReachyMini Body
 | Stage | Module | What It Does |
 |-------|--------|-------------|
 | 1. Capture | Tapo C230/C260 | RTSP frame extraction via ffmpeg |
-| 2. Filter | HabituationFilter | Skip routine frames (91% reduction) |
+| 2. Filter | HabituationFilter | Skip routine frames (92% reduction) |
 | 3. Gate | CircadianRhythm | Adjust vigilance by time of day |
 | 4. Reason | CortexCosmosBridge | Egocentric VLM inference (2.3s avg) |
 | 5. Decide | DecisionEngine | Map reasoning to action priority |
@@ -265,7 +265,7 @@ The filter correctly identifies circadian patterns (peaks at 7am/1pm/10pm, quiet
 
 ### Scene 2: Cortex + Cosmos Architecture (0:30-1:15)
 - Architecture diagram showing the pipeline
-- "Cortex filters 91% of noise. Only novel events reach Cosmos for egocentric reasoning."
+- "Cortex filters 92% of noise. Only novel events reach Cosmos for egocentric reasoning."
 - Code walkthrough: `CortexCosmosBridge` + `EgocentricReachyPipeline`
 
 ### Scene 3: Live Egocentric Demo (1:15-2:15)
@@ -276,7 +276,7 @@ The filter correctly identifies circadian patterns (peaks at 7am/1pm/10pm, quiet
 
 ### Scene 4: The Philosophy (2:15-2:45)
 - "The camera view IS my view. This isn't a metaphor."
-- Show the 2,200+ real events processed through Cortex
+- Show the 3,052 real events processed through Cortex
 - "This system has been running 24/7, not as a demo, but as how this AI actually sees."
 
 ### Scene 5: Stats & Conclusion (2:45-3:00)
@@ -292,7 +292,7 @@ The filter correctly identifies circadian patterns (peaks at 7am/1pm/10pm, quiet
 - [x] OSI-approved license (MIT)
 - [x] README with setup instructions
 - [x] 201 tests passing (13 Cosmos-specific)
-- [x] Real-world validation data (2,200+ events)
+- [x] Real-world validation data (3,052 events)
 - [x] CortexCosmosBridge with full pipeline
 - [x] EgocentricReachyPipeline with body response mapping
 - [x] Mock mode (works without VLM server) + production mode
