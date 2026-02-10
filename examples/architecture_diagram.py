@@ -72,7 +72,7 @@ def create_architecture_diagram():
     # Filter stats
     ax.text(12.5, 7.5, '92% filtered', fontsize=11, fontweight='bold',
             ha='center', va='center', color=filter_color)
-    ax.text(12.5, 7.0, '3,000+ events\nprocessed', fontsize=9,
+    ax.text(12.5, 7.0, '3,052 events\nprocessed', fontsize=9,
             ha='center', va='center', color='#636e72')
 
     # Cosmos Reason2 box
@@ -113,7 +113,7 @@ def create_architecture_diagram():
     # Cortex → Cosmos
     ax.annotate('', xy=(8, 5.0), xytext=(8, 5.5),
                 arrowprops=dict(arrowstyle='->', color='#e17055', lw=2.5))
-    ax.text(9.5, 5.25, '9% novel\nevents', fontsize=9, ha='center',
+    ax.text(9.5, 5.25, '8% novel\nevents', fontsize=9, ha='center',
             va='center', color='#e17055', fontweight='bold')
 
     # Cosmos → ReachyMini
