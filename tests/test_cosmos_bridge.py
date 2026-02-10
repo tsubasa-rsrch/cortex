@@ -2,6 +2,7 @@
 
 import tempfile
 import os
+import pytest
 from cortex.bridges.cosmos import CortexCosmosBridge, CosmosConfig, EgocentricResult
 from cortex.sources.base import Event
 
@@ -65,6 +66,10 @@ def test_reason_about_scene_motion():
     assert result.action == "prepare_greeting"
 
 
+@pytest.mark.skipif(
+    not __import__("importlib").util.find_spec("PIL"),
+    reason="Pillow not installed"
+)
 def test_reason_about_scene_with_image():
     bridge = CortexCosmosBridge()
     # Create a valid tiny test image using PIL
