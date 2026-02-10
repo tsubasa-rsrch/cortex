@@ -474,19 +474,19 @@ pip install pytest
 python -m pytest tests/ -v
 ```
 
-188 tests, <3s. Core modules have zero external dependencies; MCP server requires `mcp` package.
+201 tests, <3s. Core modules have zero external dependencies; MCP server requires `mcp` package.
 
 ## Real-World Validation
 
-Cortex's HabituationFilter has been validated against 48+ hours of real-world motion detection data from a home security camera system (2,200+ events across two cameras):
+Cortex's HabituationFilter has been validated against 96+ hours of real-world motion detection data from a home security camera system (3,000+ events across two cameras):
 
 | Metric | Value |
 |--------|-------|
-| Raw events (input) | 1,980 motion + 220 other |
-| Alerted (output) | 173 (9%) |
-| Habituated (filtered) | 1,807 (91%) |
-| Orienting responses | 170+ |
-| **Cognitive load reduction** | **91%** |
+| Raw events (input) | 2,618 motion + 386 other |
+| Alerted (output) | 219 (8%) |
+| Habituated (filtered) | 2,399 (92%) |
+| Orienting responses | 218 |
+| **Cognitive load reduction** | **92%** |
 
 The filter correctly identified circadian patterns in household activity (peaks at 7am/1pm/10pm, quiet at 2-3am) and separated routine movement from novel events — the same distinction human perception makes unconsciously.
 

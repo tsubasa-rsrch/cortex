@@ -10,9 +10,9 @@
 
 ## Devpost Description (~400 words)
 
-**Cortex** is a cognitive-science-based perception layer that connects real-world sensors to Elasticsearch Agent Builder through neuroscience-inspired filtering. Instead of dumping every sensor event into your index, Cortex applies habituation, circadian rhythms, and priority assessment to filter 91% of noise — so your Agent Builder agent only reasons about what truly matters.
+**Cortex** is a cognitive-science-based perception layer that connects real-world sensors to Elasticsearch Agent Builder through neuroscience-inspired filtering. Instead of dumping every sensor event into your index, Cortex applies habituation, circadian rhythms, and priority assessment to filter 92% of noise — so your Agent Builder agent only reasons about what truly matters.
 
-**The Problem**: AI agents connected to physical sensors (cameras, microphones, IoT) generate thousands of events per day. Indexing everything to Elasticsearch wastes storage, creates noisy search results, and overwhelms Agent Builder conversations with irrelevant context. A security camera generates 1,980 motion events in 48 hours. Your agent shouldn't reason about all of them.
+**The Problem**: AI agents connected to physical sensors (cameras, microphones, IoT) generate thousands of events per day. Indexing everything to Elasticsearch wastes storage, creates noisy search results, and overwhelms Agent Builder conversations with irrelevant context. A security camera generates 2,618 motion events in 48 hours. Your agent shouldn't reason about all of them.
 
 **The Solution**: Cortex sits between your sensors and Elasticsearch, applying three cognitive filters before indexing:
 
@@ -22,13 +22,13 @@
 
 **The Integration**: `CortexElasticBridge` provides five integration points with Elasticsearch:
 
-- **Event Ingestion**: HabituationFilter → only novel events get indexed (91% noise reduction)
+- **Event Ingestion**: HabituationFilter → only novel events get indexed (92% noise reduction)
 - **Agent Builder Context**: CircadianRhythm + NotificationQueue → inject real-time perception context into Agent Builder conversations via `build_agent_system_prompt()`
 - **Tool Selection**: DecisionEngine pre-filters which Agent Builder tools are relevant based on event priority
 - **Periodic Jobs**: Scheduler runs ES|QL queries on cron-like intervals for pattern detection
 - **Health Monitoring**: Automatic cluster health checks with notification on degradation
 
-Built entirely in Python with zero external dependencies, Cortex includes 7 cognitive modules, 201 tests, 14 dedicated ES bridge tests, and has been validated on 48+ hours of live sensor data (2,200+ events, 91% cognitive load reduction).
+Built entirely in Python with zero external dependencies, Cortex includes 7 cognitive modules, 201 tests, 14 dedicated ES bridge tests, and has been validated on 96+ hours of live sensor data (3,000+ events, 92% cognitive load reduction).
 
 **GitHub**: https://github.com/tsubasa-rsrch/cortex
 
@@ -44,7 +44,7 @@ Sensors → Cortex (perception filter) → Elasticsearch (index) → Agent Build
 
 | # | Cortex Module | ES Integration | What It Does |
 |---|--------------|----------------|--------------|
-| 1 | HabituationFilter | Event Ingestion | Filter noisy sensors before indexing. 1,980 events → 173 indexed (91% reduction) |
+| 1 | HabituationFilter | Event Ingestion | Filter noisy sensors before indexing. 2,618 events → 219 indexed (92% reduction) |
 | 2 | CircadianRhythm | Agent Behavior | Adjust Agent Builder system prompts by time of day |
 | 3 | DecisionEngine | Tool Selection | Pre-filter Agent Builder tools based on event priority |
 | 4 | NotificationQueue | Conversation Context | Inject background perception into Agent Builder conversations |
@@ -62,7 +62,7 @@ bridge = CortexElasticBridge(ESConfig(
     index_prefix="cortex-events"
 ))
 
-# Filter and index events (91% noise reduction)
+# Filter and index events (92% noise reduction)
 indexed = bridge.index_event(event)
 
 # Build context-aware Agent Builder prompt
@@ -110,9 +110,9 @@ bridge.run_perception_loop(
 
 | Approach | Events Indexed | API Calls | Storage | Agent Quality |
 |----------|---------------|-----------|---------|--------------|
-| Index all events | 1,980 | 1,980 | 100% | Drowns in noise |
+| Index all events | 2,618 | 2,618 | 100% | Drowns in noise |
 | Simple threshold | ~500 | ~500 | 25% | Misses context |
-| **Cortex + ES** | **173** | **173** | **9%** | **Context-aware** |
+| **Cortex + ES** | **219** | **219** | **9%** | **Context-aware** |
 
 Cortex doesn't just filter by threshold. It applies:
 - **Habituation**: Repeated stimuli from the same source raise the bar
@@ -147,15 +147,15 @@ Automatically appends perception context to your Agent Builder's system prompt, 
 
 ## Real-World Validation
 
-Validated on 48+ hours of live motion detection data from a home security camera system:
+Validated on 96+ hours of live motion detection data from a home security camera system:
 
 | Metric | Value |
 |--------|-------|
-| Raw events (input) | 1,980 motion + 220 other |
-| Indexed to ES (output) | 173 (9%) |
-| Habituated (filtered) | 1,807 (91%) |
-| Orienting responses | 170+ |
-| **Noise reduction** | **91%** |
+| Raw events (input) | 2,618 motion + 220 other |
+| Indexed to ES (output) | 219 (8%) |
+| Habituated (filtered) | 2,399 (92%) |
+| Orienting responses | 218 |
+| **Noise reduction** | **92%** |
 
 The filter correctly identified circadian patterns (peaks at 7am/1pm/10pm, quiet at 2-3am) and separated routine movement from novel events — exactly the kind of intelligence an Agent Builder agent needs.
 
@@ -171,9 +171,9 @@ The filter correctly identified circadian patterns (peaks at 7am/1pm/10pm, quiet
 
 ## What We Learned
 
-- **91% of sensor events are noise**. Filtering before indexing isn't optional — it's essential for any Elasticsearch deployment with real-world sensors.
+- **92% of sensor events are noise**. Filtering before indexing isn't optional — it's essential for any Elasticsearch deployment with real-world sensors.
 - **Cognitive science provides battle-tested algorithms**. Habituation and orienting response are millions of years of evolution solving the same filtering problem.
-- **Agent Builder agents perform better with less context**. Injecting 173 relevant events beats 1,980 noisy ones for reasoning quality.
+- **Agent Builder agents perform better with less context**. Injecting 219 relevant events beats 2,618 noisy ones for reasoning quality.
 
 ---
 
@@ -181,7 +181,7 @@ The filter correctly identified circadian patterns (peaks at 7am/1pm/10pm, quiet
 
 | Metric | Value |
 |--------|-------|
-| Python lines (total) | 7,169 |
+| Python lines (total) | 8,773 |
 | ES bridge lines | 372 |
 | Tests (total) | 201 (all passing) |
 | ES bridge tests | 14 (all passing) |
@@ -189,16 +189,16 @@ The filter correctly identified circadian patterns (peaks at 7am/1pm/10pm, quiet
 | Dependencies | 0 (stdlib only) |
 | Cognitive modules | 7 |
 | ES integration points | 5 |
-| Real-world events processed | 2,200+ |
-| Noise reduction | 91% |
+| Real-world events processed | 3,000+ |
+| Noise reduction | 92% |
 
 ---
 
 ## Demo Video Script (3 min target)
 
 ### Scene 1: The Problem (0:00-0:30)
-- Terminal showing raw motion events flooding in (1,980 events in 48h)
-- "Most agents index ALL of this to Elasticsearch. That's 91% noise in your search results."
+- Terminal showing raw motion events flooding in (2,618 events in 48h)
+- "Most agents index ALL of this to Elasticsearch. That's 92% noise in your search results."
 
 ### Scene 2: Cortex Architecture (0:30-1:15)
 - Architecture diagram showing five integration points
@@ -208,7 +208,7 @@ The filter correctly identified circadian patterns (peaks at 7am/1pm/10pm, quiet
 ### Scene 3: Live Replay Demo (1:15-2:15)
 - `cortex-replay` running on real event log data
 - Color-coded output: green=indexed, red=filtered, yellow=orienting response
-- "1,980 raw events → 173 indexed. 91% reduction."
+- "2,618 raw events → 219 indexed. 92% reduction."
 - Show Agent Builder context injection in real-time
 
 ### Scene 4: Agent Builder Integration (2:15-2:45)

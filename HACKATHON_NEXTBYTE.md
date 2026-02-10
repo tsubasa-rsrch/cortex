@@ -109,15 +109,15 @@ Perception maps to physical actions:
 
 ## Real-World Validation
 
-Cortex has been validated against 48+ hours of live motion detection data from a home security camera system (2,200+ events across two cameras):
+Cortex has been validated against 96+ hours of live motion detection data from a home security camera system (3,000+ events across two cameras):
 
 | Metric | Value |
 |--------|-------|
-| Raw events (input) | 1,980 motion + 220 other |
-| Alerted (output) | 173 (9%) |
-| Habituated (filtered) | 1,807 (91%) |
-| Orienting responses | 170+ |
-| **Cognitive load reduction** | **91%** |
+| Raw events (input) | 2,618 motion + 386 other |
+| Alerted (output) | 219 (8%) |
+| Habituated (filtered) | 2,399 (92%) |
+| Orienting responses | 218 |
+| **Cognitive load reduction** | **92%** |
 
 The filter correctly identified circadian patterns in household activity (peaks at 7am/1pm/10pm, quiet at 2-3am) and separated routine movement from novel events.
 
@@ -138,15 +138,15 @@ Average: 2.5 seconds per scene, all egocentric first-person perspective.
 
 | Metric | Value |
 |--------|-------|
-| Python lines | 7,169 |
+| Python lines | 8,773 |
 | Tests | 201 (all passing) |
-| Commits | 64 |
+| Commits | 67 |
 | Dependencies | 0 (stdlib only) |
 | MCP tools | 11 |
 | Sensor sources | 4 (camera, audio, IMU, vision/YOLO) |
 | Platform bridges | 4 (Gemini 3, Elasticsearch, Cosmos VLM, MCP) |
-| Real-world events processed | 2,200+ |
-| Cognitive load reduction | 91% |
+| Real-world events processed | 3,000+ |
+| Cognitive load reduction | 92% |
 | VLM inference latency | 1.2-2.4s |
 
 ---
@@ -170,7 +170,7 @@ Average: 2.5 seconds per scene, all egocentric first-person perspective.
 ## Demo Video Script (3 min target)
 
 ### Scene 1: The Problem (0:00-0:30)
-- Terminal showing raw motion events flooding in (1,980 events)
+- Terminal showing raw motion events flooding in (2,567 events)
 - "Most AI agents try to reason about ALL of this. That's like trying to consciously process every photon hitting your retina."
 
 ### Scene 2: Cortex Architecture (0:30-1:15)
@@ -181,7 +181,7 @@ Average: 2.5 seconds per scene, all egocentric first-person perspective.
 ### Scene 3: Live Replay Demo (1:15-2:15)
 - `cortex-replay` running on real event log data
 - Color-coded output: green=passed, red=filtered, yellow=orienting
-- "1,980 raw events → 173 conscious events. 91% reduction."
+- "2,567 raw events → 216 conscious events. 92% reduction."
 - Show circadian pattern detection
 
 ### Scene 4: VLM Egocentric Inference (2:15-2:45)

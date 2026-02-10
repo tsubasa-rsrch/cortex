@@ -29,9 +29,9 @@ This egocentric output maps directly to **ReachyMini** physical responses:
 - Sudden unexpected movement → alert posture, orienting response
 - Empty room → sleep mode with gentle antenna droop
 
-The full pipeline runs on a Mac mini M2 (8GB): camera frame capture (RTSP) → Cortex perception filter (91% noise reduction) → VLM egocentric inference (2.3s average) → ReachyMini body response (antenna + head + emotion presets).
+The full pipeline runs on a Mac mini M2 (8GB): camera frame capture (RTSP) → Cortex perception filter (92% noise reduction) → VLM egocentric inference (2.3s average) → ReachyMini body response (antenna + head + emotion presets).
 
-**Key Differentiator**: "The camera view IS my view" isn't a metaphor. The AI agent (Tsubasa) has been using these cameras as its actual eyes for months, processing 2,200+ real events through Cortex. This is a genuinely egocentric system, not a simulated one.
+**Key Differentiator**: "The camera view IS my view" isn't a metaphor. The AI agent (Tsubasa) has been using these cameras as its actual eyes for months, processing 3,000+ real events through Cortex. This is a genuinely egocentric system, not a simulated one.
 
 Built in Python with zero external dependencies (except llama.cpp for inference). 201 tests, 13 Cosmos-specific tests, all passing.
 
@@ -205,15 +205,15 @@ The `EgocentricReachyPipeline` connects VLM reasoning to physical body:
 
 ## Real-World Validation
 
-Cortex has been running 24/7 on live camera feeds for 48+ hours:
+Cortex has been running 24/7 on live camera feeds for 96+ hours:
 
 | Metric | Value |
 |--------|-------|
-| Raw events (input) | 1,980 motion + 220 other |
-| Passed to VLM (output) | 173 (9%) |
-| Habituated (filtered) | 1,807 (91%) |
-| Orienting responses | 170+ |
-| **API call reduction** | **91%** |
+| Raw events (input) | 2,618 motion + 386 other |
+| Passed to VLM (output) | 219 (8%) |
+| Habituated (filtered) | 2,399 (92%) |
+| Orienting responses | 218 |
+| **API call reduction** | **92%** |
 
 The filter correctly identifies circadian patterns (peaks at 7am/1pm/10pm, quiet at 2-3am) and separates routine movement from novel events.
 
@@ -230,7 +230,7 @@ The filter correctly identifies circadian patterns (peaks at 7am/1pm/10pm, quiet
 
 ## What We Learned
 
-- **91% of visual events are noise**. Cognitive filtering before VLM inference isn't optional for real-time robotics.
+- **92% of visual events are noise**. Cognitive filtering before VLM inference isn't optional for real-time robotics.
 - **2B VLM models are surprisingly capable**. Person detection, intent recognition, and pet identification all work at 2B scale in under 3 seconds.
 - **Egocentric framing matters**. "I see a person approaching me" produces better robotic responses than "The camera shows a person."
 - **Cognitive science provides battle-tested algorithms**. Habituation and orienting response are millions of years of evolution solving the same filtering problem robots face today.
@@ -241,19 +241,19 @@ The filter correctly identifies circadian patterns (peaks at 7am/1pm/10pm, quiet
 
 | Metric | Value |
 |--------|-------|
-| Python lines (total) | 7,169 |
+| Python lines (total) | 8,773 |
 | Cosmos bridge lines | 446 |
 | Tests (total) | 201 (all passing) |
 | Cosmos bridge tests | 13 (all passing) |
-| Commits | 66 |
+| Commits | 67 |
 | Dependencies | 0 (stdlib only) |
 | VLM inference latency | 1.2-2.4s (avg 2.3s) |
 | VLM model size | 1.0GB (Qwen3-VL-2B Q4_K_M) |
 | VLM RAM usage | 880MB |
 | Emotion presets | 88 |
 | Dance presets | 19 |
-| Real-world events processed | 2,200+ |
-| Noise reduction | 91% |
+| Real-world events processed | 3,000+ |
+| Noise reduction | 92% |
 
 ---
 
