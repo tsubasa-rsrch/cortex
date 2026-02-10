@@ -12,7 +12,7 @@
 ```bash
 # Show raw event count
 wc -l ~/.tsubasa-daemon/memory/event_log.jsonl
-# Expected: ~3004 lines
+# Expected: ~3052 lines
 
 # Show a few raw events scrolling fast
 tail -20 ~/.tsubasa-daemon/memory/event_log.jsonl | python3 -m json.tool | head -40
@@ -36,7 +36,7 @@ Wait for it to complete (~10 seconds). Color-coded output:
 - Red: filtered out (habituated)
 - Yellow: orienting responses (novel stimuli breaking through)
 
-**Narration**: "3,004 events in, 219 out. 92% noise reduction. The filter learns what's routine and only alerts on novel events."
+**Narration**: "2,663 motion events in, 224 out. 92% noise reduction. The filter learns what's routine and only alerts on novel events."
 
 #### Scene 4: VLM Inference (30 sec)
 ```bash

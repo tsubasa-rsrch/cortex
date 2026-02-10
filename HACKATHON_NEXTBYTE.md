@@ -113,10 +113,10 @@ Cortex has been validated against 96+ hours of live motion detection data from a
 
 | Metric | Value |
 |--------|-------|
-| Raw events (input) | 2,618 motion + 386 other |
-| Alerted (output) | 219 (8%) |
-| Habituated (filtered) | 2,399 (92%) |
-| Orienting responses | 218 |
+| Raw events (input) | 2,663 motion + 389 other |
+| Alerted (output) | 224 (8%) |
+| Habituated (filtered) | 2,439 (92%) |
+| Orienting responses | 223 |
 | **Cognitive load reduction** | **92%** |
 
 The filter correctly identified circadian patterns in household activity (peaks at 7am/1pm/10pm, quiet at 2-3am) and separated routine movement from novel events.
@@ -140,7 +140,7 @@ Average: 2.5 seconds per scene, all egocentric first-person perspective.
 |--------|-------|
 | Python lines | 8,773 |
 | Tests | 201 (all passing) |
-| Commits | 67 |
+| Commits | 70 |
 | Dependencies | 0 (stdlib only) |
 | MCP tools | 11 |
 | Sensor sources | 4 (camera, audio, IMU, vision/YOLO) |
@@ -170,7 +170,7 @@ Average: 2.5 seconds per scene, all egocentric first-person perspective.
 ## Demo Video Script (3 min target)
 
 ### Scene 1: The Problem (0:00-0:30)
-- Terminal showing raw motion events flooding in (3,004 events in 96 hours)
+- Terminal showing raw motion events flooding in (3,052 events in 96+ hours)
 - "Most AI agents try to reason about ALL of this. That's like trying to consciously process every photon hitting your retina."
 
 ### Scene 2: Cortex Architecture (0:30-1:15)
@@ -181,7 +181,7 @@ Average: 2.5 seconds per scene, all egocentric first-person perspective.
 ### Scene 3: Live Replay Demo (1:15-2:15)
 - `cortex-replay` running on real event log data
 - Color-coded output: green=passed, red=filtered, yellow=orienting
-- "3,004 raw events → 219 conscious events. 92% reduction."
+- "2,663 motion events → 224 conscious events. 92% noise reduction."
 - Show circadian pattern detection
 
 ### Scene 4: VLM Egocentric Inference (2:15-2:45)
