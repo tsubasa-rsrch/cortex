@@ -70,9 +70,9 @@ def create_architecture_diagram():
                 ha='center', va='center', fontweight='bold')
 
     # Filter stats
-    ax.text(12.5, 7.5, '91% filtered', fontsize=11, fontweight='bold',
+    ax.text(12.5, 7.5, '92% filtered', fontsize=11, fontweight='bold',
             ha='center', va='center', color=filter_color)
-    ax.text(12.5, 7.0, '2,200+ events\nprocessed', fontsize=9,
+    ax.text(12.5, 7.0, '3,000+ events\nprocessed', fontsize=9,
             ha='center', va='center', color='#636e72')
 
     # Cosmos Reason2 box
@@ -129,7 +129,7 @@ def create_architecture_diagram():
             bbox=dict(boxstyle='round,pad=0.3', facecolor='#dfe6e9',
                       edgecolor='#00b894', linewidth=2))
 
-    ax.text(14.5, 1.5, 'Team 668\ntsubasa-rsrch/cortex\n201 tests | 7,169 LOC',
+    ax.text(14.5, 1.5, 'Team 668\ntsubasa-rsrch/cortex\n201 tests | 8,773 LOC',
             fontsize=9, ha='center', va='center', color='#636e72',
             bbox=dict(boxstyle='round,pad=0.3', facecolor='#ffeaa7',
                       edgecolor='#fdcb6e', linewidth=1))
