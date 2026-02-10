@@ -170,7 +170,7 @@ Average: 2.5 seconds per scene, all egocentric first-person perspective.
 ## Demo Video Script (3 min target)
 
 ### Scene 1: The Problem (0:00-0:30)
-- Terminal showing raw motion events flooding in (2,567 events)
+- Terminal showing raw motion events flooding in (3,004 events in 96 hours)
 - "Most AI agents try to reason about ALL of this. That's like trying to consciously process every photon hitting your retina."
 
 ### Scene 2: Cortex Architecture (0:30-1:15)
@@ -181,7 +181,7 @@ Average: 2.5 seconds per scene, all egocentric first-person perspective.
 ### Scene 3: Live Replay Demo (1:15-2:15)
 - `cortex-replay` running on real event log data
 - Color-coded output: green=passed, red=filtered, yellow=orienting
-- "2,567 raw events → 216 conscious events. 92% reduction."
+- "3,004 raw events → 219 conscious events. 92% reduction."
 - Show circadian pattern detection
 
 ### Scene 4: VLM Egocentric Inference (2:15-2:45)
