@@ -190,11 +190,7 @@ class EgocentricReachyPipeline:
             return False
         try:
             from reachy_mini import ReachyMini
-            self.mini = ReachyMini(
-                connection_mode="localhost_only",
-                timeout=10.0,
-                media_backend="no_media",
-            )
+            self.mini = ReachyMini(media_backend="no_media")
             self.mini.wake_up()
             time.sleep(0.5)
             self._load_presets()
@@ -439,16 +435,25 @@ def main():
                         help="Use real VLM server (llama-server on :8090)")
     parser.add_argument("--port", type=int, default=8090,
                         help="VLM server port (default: 8090)")
+    parser.add_argument("--cosmos-8b", action="store_true",
+                        help="Use Cosmos Reason2-8B (requires M4 Max 48GB)")
     args = parser.parse_args()
 
     # Configure
     mock_mode = not args.real_vlm
     use_reachy = not args.vlm_only
 
+    if args.cosmos_8b:
+        model_name = "cosmos-reason2-8b"
+    elif not mock_mode:
+        model_name = "cosmos-reason2"
+    else:
+        model_name = "mock"
+
     config = CosmosConfig(
         mock_mode=mock_mode,
         server_port=args.port,
-        model_name="qwen3-vl-2b" if not mock_mode else "mock",
+        model_name=model_name,
     )
 
     pipeline = EgocentricReachyPipeline(

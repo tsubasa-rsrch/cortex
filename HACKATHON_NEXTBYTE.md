@@ -204,8 +204,8 @@ Average: 2.5 seconds per scene, all egocentric first-person perspective.
 - [x] Real-world validation data
 - [x] Multiple demo scripts (replay, VLM inference, ReachyMini bridge)
 - [x] Architecture diagram (examples/architecture_diagram.png)
-- [ ] Demo video (2-5 min) — needs screen recording by Kana
-- [ ] Devpost submission — Kana has account, needs to submit
+- [x] Demo video (2-5 min) — submitted 2/10
+- [x] Devpost submission — submitted 2/10
 - [ ] Screenshots of demos in action
 
 ---
