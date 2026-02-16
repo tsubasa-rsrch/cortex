@@ -499,6 +499,7 @@ def run_live(
     motion_threshold: float = 8.0,
     use_hub: bool = True,
     force_first: bool = False,
+    max_cycles: int = 0,
 ):
     """Run live pipeline: Camera → Cortex → VLM → ReachyMini.
 
@@ -528,6 +529,9 @@ def run_live(
     try:
         while True:
             cycle += 1
+            if max_cycles and cycle > max_cycles:
+                print(f"\n{c['stats']}  Reached max cycles ({max_cycles}). Stopping.{c['reset']}")
+                break
             time.sleep(interval)
 
             # Capture current frame
@@ -628,6 +632,8 @@ def main():
                         help="Don't send commands to reachy_hub")
     parser.add_argument("--force-first", action="store_true",
                         help="Force VLM reasoning on first frame (demo/recording)")
+    parser.add_argument("--max-cycles", type=int, default=0,
+                        help="Max cycles before stopping (0=infinite)")
     args = parser.parse_args()
 
     # Configure
@@ -664,6 +670,7 @@ def main():
             motion_threshold=args.threshold,
             use_hub=not args.no_hub,
             force_first=args.force_first,
+            max_cycles=args.max_cycles,
         )
     else:
         run_demo(pipeline)
