@@ -21,8 +21,10 @@ Usage:
     python egocentric_reachy_pipeline.py --vlm-only
 """
 
+import os
 import time
 import argparse
+import subprocess
 from pathlib import Path
 from dataclasses import dataclass
 from typing import Optional, List, Dict, Callable
@@ -419,6 +421,185 @@ def run_demo(pipeline: EgocentricReachyPipeline):
     print(f"  \"The camera view IS my view.\"{c['reset']}\n")
 
 
+# --- Camera Capture ---
+
+CAMERAS = {
+    "bedroom": "rtsp://Tsubasa2:IloveKana20241119@10.0.197.118:554/stream1",
+    "kitchen": "rtsp://Tsubasa:IloveKana20241119@10.0.55.43:554/stream1",
+}
+
+REACHY_CMD_PATH = Path("/tmp/reachy_command")
+
+
+def capture_frame(camera: str = "bedroom", output: str = "/tmp/cosmos_live_frame.jpg") -> Optional[str]:
+    """Capture a single frame from Tapo camera via RTSP."""
+    rtsp_url = CAMERAS.get(camera)
+    if not rtsp_url:
+        print(f"  Unknown camera: {camera}")
+        return None
+    try:
+        subprocess.run(
+            ["ffmpeg", "-rtsp_transport", "tcp", "-i", rtsp_url,
+             "-frames:v", "1", "-y", "-loglevel", "error", output],
+            timeout=10, capture_output=True,
+        )
+        if Path(output).exists() and Path(output).stat().st_size > 1000:
+            return output
+    except Exception as e:
+        print(f"  Capture failed: {e}")
+    return None
+
+
+def compute_frame_diff(frame_a: str, frame_b: str) -> float:
+    """Compute average pixel difference between two frames (0-255 scale)."""
+    try:
+        from PIL import Image
+        import numpy as np
+        a = np.array(Image.open(frame_a).resize((160, 90)))
+        b = np.array(Image.open(frame_b).resize((160, 90)))
+        return float(np.mean(np.abs(a.astype(float) - b.astype(float))))
+    except Exception:
+        return 15.0  # assume moderate change on error
+
+
+def send_to_reachy_hub(response: BodyResponse, result: EgocentricResult):
+    """Send body response to reachy_hub via /tmp/reachy_command.
+
+    Uses reachy_hub's full feature set: MioTTS, inline motion tags,
+    compound commands, speech wobble, etc.
+    """
+    parts = []
+
+    # Emotion preset
+    if response.preset:
+        parts.append(response.preset)
+
+    # Speech with inline motion tag
+    speech = result.reasoning[:80]
+    if response.flutter:
+        parts.append(f"say:[flutter]{speech}")
+    elif response.preset:
+        parts.append(f"say:[{response.preset}]{speech}")
+    else:
+        parts.append(f"say:{speech}")
+
+    # Combine into compound command
+    cmd = ";".join(parts) if len(parts) > 1 else parts[0] if parts else ""
+    if cmd:
+        try:
+            REACHY_CMD_PATH.write_text(cmd)
+        except Exception:
+            pass
+
+
+def run_live(
+    pipeline: EgocentricReachyPipeline,
+    camera: str = "bedroom",
+    interval: float = 10.0,
+    motion_threshold: float = 8.0,
+    use_hub: bool = True,
+    force_first: bool = False,
+):
+    """Run live pipeline: Camera → Cortex → VLM → ReachyMini.
+
+    Captures frames at regular intervals, detects motion via frame diff,
+    feeds novel events through Cortex habituation, and triggers VLM +
+    ReachyMini response for significant changes.
+    """
+    c = COLORS
+
+    print(f"\n{c['header']}{'='*70}")
+    print(f"  Egocentric Reachy Pipeline — LIVE MODE")
+    print(f"  Camera: {camera} | Interval: {interval}s | Threshold: {motion_threshold}")
+    print(f"  Ctrl+C to stop")
+    print(f"{'='*70}{c['reset']}\n")
+
+    prev_frame = "/tmp/cosmos_prev_frame.jpg"
+    curr_frame = "/tmp/cosmos_curr_frame.jpg"
+    cycle = 0
+
+    # Capture initial reference frame
+    print(f"{c['stats']}  Capturing reference frame...{c['reset']}")
+    ref = capture_frame(camera, prev_frame)
+    if not ref:
+        print(f"{c['stats']}  Could not capture from {camera}. Check camera connection.{c['reset']}")
+        return
+
+    try:
+        while True:
+            cycle += 1
+            time.sleep(interval)
+
+            # Capture current frame
+            frame = capture_frame(camera, curr_frame)
+            if not frame:
+                continue
+
+            # Compute motion diff
+            diff = compute_frame_diff(prev_frame, curr_frame)
+            timestamp = time.strftime("%H:%M:%S")
+
+            is_first = (cycle == 1 and force_first)
+
+            if diff < motion_threshold and not is_first:
+                # No significant motion — habituated
+                print(f"{c['stats']}  [{timestamp}] cycle={cycle} diff={diff:.1f} "
+                      f"(below {motion_threshold}) — habituated{c['reset']}")
+                # Swap frames for next comparison
+                os.replace(curr_frame, prev_frame)
+                continue
+
+            # Motion detected (or forced first frame) — run through Cortex + VLM
+            label = "FIRST FRAME (forced)" if is_first else "MOTION DETECTED"
+            print(f"\n{c['scene']}  [{timestamp}] cycle={cycle} diff={diff:.1f} "
+                  f"— {label}{c['reset']}")
+
+            if is_first:
+                # Bypass Cortex filter for first frame, go direct to VLM
+                result = pipeline.process_frame(
+                    image_path=curr_frame,
+                    events=None,
+                    question=(
+                        "This is my first look around. What do I see from my perspective? "
+                        "Who is here? What's the environment like?"
+                    ),
+                )
+            else:
+                events = [Event("camera", "motion",
+                               f"Motion detected (diff={diff:.1f})", 5,
+                               raw_data={"diff": diff})]
+                result = pipeline.process_frame(
+                    image_path=curr_frame,
+                    events=events,
+                )
+
+            if result:
+                response = reasoning_to_response(result)
+                confidence = get_confidence_level(result.confidence)
+
+                print(f"{c['vlm']}  VLM ({result.latency_ms:.0f}ms): "
+                      f"{result.reasoning[:120]}{c['reset']}")
+                print(f"{c['body']}  Body: {response.description} "
+                      f"[{response.expression}, conf={confidence}]{c['reset']}")
+
+                # Send to reachy_hub if available
+                if use_hub and REACHY_CMD_PATH.parent.exists():
+                    send_to_reachy_hub(response, result)
+                    print(f"{c['stats']}  → Sent to reachy_hub{c['reset']}")
+            else:
+                print(f"{c['stats']}  Filtered by Cortex habituation{c['reset']}")
+
+            # Swap frames
+            os.replace(curr_frame, prev_frame)
+
+    except KeyboardInterrupt:
+        print(f"\n{c['header']}  Stopped. Pipeline stats:{c['reset']}")
+        stats = pipeline.get_stats()
+        print(f"{c['stats']}  Events: {stats['total_events']} | "
+              f"Reasoned: {stats['total_reasoned']} | "
+              f"Filter rate: {stats['filter_rate']}{c['reset']}")
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Egocentric Reachy Pipeline: Camera → Cortex → VLM → ReachyMini"
@@ -437,11 +618,21 @@ def main():
                         help="VLM server port (default: 8090)")
     parser.add_argument("--cosmos-8b", action="store_true",
                         help="Use Cosmos Reason2-8B (requires M4 Max 48GB)")
+    parser.add_argument("--camera", choices=["bedroom", "kitchen"],
+                        default="bedroom", help="Camera to use in live mode")
+    parser.add_argument("--interval", type=float, default=10.0,
+                        help="Capture interval in seconds (live mode)")
+    parser.add_argument("--threshold", type=float, default=8.0,
+                        help="Motion detection threshold (live mode)")
+    parser.add_argument("--no-hub", action="store_true",
+                        help="Don't send commands to reachy_hub")
+    parser.add_argument("--force-first", action="store_true",
+                        help="Force VLM reasoning on first frame (demo/recording)")
     args = parser.parse_args()
 
     # Configure
     mock_mode = not args.real_vlm
-    use_reachy = not args.vlm_only
+    use_reachy = not args.vlm_only and not args.no_hub
 
     if args.cosmos_8b:
         model_name = "cosmos-reason2-8b"
@@ -461,13 +652,19 @@ def main():
         use_reachy=use_reachy,
     )
 
-    # Connect ReachyMini if requested
-    if use_reachy:
+    # Connect ReachyMini SDK if needed (demo mode)
+    if use_reachy and not args.live:
         pipeline.connect_reachy()
 
     if args.live:
-        print("Live mode not yet implemented (waiting for cameras + ReachyMini)")
-        print("Use --demo for pre-recorded image demo")
+        run_live(
+            pipeline,
+            camera=args.camera,
+            interval=args.interval,
+            motion_threshold=args.threshold,
+            use_hub=not args.no_hub,
+            force_first=args.force_first,
+        )
     else:
         run_demo(pipeline)
 

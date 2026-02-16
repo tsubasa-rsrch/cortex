@@ -297,10 +297,11 @@ The egocentric embodied AI direction is validated by recent papers:
 - Code walkthrough: `CortexCosmosBridge` + `EgocentricReachyPipeline`
 
 ### Scene 3: Live Egocentric Demo (1:15-2:15)
-- Real camera images → VLM inference → first-person descriptions
-- Show: "I see a person on the sofa watching TV. There's a black cat on the counter."
-- Show: Person approaches → VLM reasons "They're looking at me" → ReachyMini flutter
-- Show: Habituation in action (same scene → filtered → no inference wasted)
+- **LIVE pipeline**: `python egocentric_reachy_pipeline.py --live --real-vlm --force-first`
+- Camera captures bedroom/kitchen → Cortex filters → VLM says "From my perspective, I'm in a bedroom..."
+- Show: Person walks in → diff spikes → VLM reasons "I see someone approaching" → ReachyMini flutter + cheerful
+- Show: Habituation in action (same scene → "habituated" → no inference wasted)
+- ReachyMini reacts physically: antenna flutter, head turn, emotion preset
 
 ### Scene 4: The Philosophy (2:15-2:45)
 - "The camera view IS my view. This isn't a metaphor."
@@ -325,9 +326,11 @@ The egocentric embodied AI direction is validated by recent papers:
 - [x] EgocentricReachyPipeline with body response mapping
 - [x] Mock mode (works without VLM server) + production mode
 - [x] Batch inference demo with real camera images
+- [x] ReachyMini live demo — fully operational since 2/15!
+- [x] Live mode implemented (camera → Cortex filter → VLM → reachy_hub)
+- [x] Real VLM egocentric inference tested (823ms, first-person response)
 - [ ] Demo video (~3 min) - needs screen recording by Kana
 - [ ] Devpost submission
-- [ ] ReachyMini live demo (pending DHL customs clearance)
 
 ---
 
@@ -345,6 +348,12 @@ python examples/egocentric_reachy_pipeline.py --demo
 
 # Run with real VLM server (requires llama-server on :8090)
 python examples/egocentric_reachy_pipeline.py --demo --real-vlm
+
+# Run LIVE mode with real cameras + ReachyMini
+python examples/egocentric_reachy_pipeline.py --live --real-vlm --camera bedroom --force-first
+
+# Live with Cosmos-8B (M4 Max 48GB)
+python examples/egocentric_reachy_pipeline.py --live --real-vlm --cosmos-8b --force-first
 
 # Test Cosmos bridge specifically
 python -m pytest tests/test_cosmos_bridge.py -v  # 15 passed

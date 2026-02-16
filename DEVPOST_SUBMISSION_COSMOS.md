@@ -32,7 +32,7 @@ Cortex + Cosmos bridges neuroscience-inspired perception with egocentric vision-
 2. **Orienting Response** (Sokolov reflex): Novel stimuli always break through. A new person entering triggers immediate reasoning.
 3. **Circadian Rhythm** (Borbely, 1982): Time-of-day awareness adjusts vigilance.
 
-When a novel event triggers reasoning, the local VLM (Qwen3-VL-2B via llama.cpp) analyzes the scene from an **egocentric first-person perspective**: "I see a person approaching from my left."
+When a novel event triggers reasoning, **Cosmos Reason2** (8B locally on M4 Max 48GB, or 2B for edge devices, or via NVIDIA NIM API) analyzes the scene from an **egocentric first-person perspective**: "From my perspective, I'm in a bedroom. I see a person approaching from my left."
 
 This maps directly to **ReachyMini** physical responses:
 - Person approaching → excited antenna flutter, look toward them
@@ -41,9 +41,12 @@ This maps directly to **ReachyMini** physical responses:
 
 ## How we built it
 
-**Local VLM Stack**: Qwen3-VL-2B Q4_K_M (1.0GB) + mmproj Q8_0 (424MB) via llama-server, running on Mac mini M2 8GB (880MB RAM usage). Average 2.3s per inference.
+**Tri-Mode VLM Stack**:
+- **Primary**: Cosmos Reason2-8B Q8_0 (8.7GB) locally on M4 Max MacBook Pro 48GB. ~2-4s per inference.
+- **Edge**: Cosmos Reason2-2B (4.9GB) or Qwen3-VL-2B (1.0GB) for 8GB devices. ~1-2s per inference.
+- **Cloud**: Cosmos Reason2-8B via NVIDIA NIM API for teams without local GPU.
 
-**Why Qwen3-VL-2B**: Cosmos-Reason2-8B (8.1GB) caused OOM on our 8GB machine. Qwen3-VL-2B provides excellent egocentric reasoning at 1/8th the size.
+All modes use llama.cpp via OpenAI-compatible API.
 
 **Cortex Integration**: `CortexCosmosBridge` wraps habituation, circadian rhythm, decision engine, notification queue, and scheduler — all applying cognitive filtering before VLM inference.
 
@@ -58,15 +61,15 @@ This maps directly to **ReachyMini** physical responses:
 | Raw motion events | 2,663 |
 | Passed to VLM | 224 (8%) |
 | Filtered (habituated) | 2,439 (92%) |
-| VLM inference latency | 1.2-2.4s avg |
-| VLM model size | 1.0GB |
-| VLM RAM usage | 880MB |
+| VLM inference latency | 0.8-4s (model dependent) |
+| VLM model (primary) | Cosmos-Reason2-8B Q8_0 (8.7GB) |
+| VLM model (edge) | Cosmos-Reason2-2B (4.9GB) |
 
 **Key Differentiator**: "The camera view IS my view" isn't a metaphor. This AI agent has been using these cameras as its actual eyes for months, processing 3,052 real events through Cortex.
 
 ## Challenges
 
-1. Cosmos-Reason2-8B OOM on 8GB machine → switched to Qwen3-VL-2B
+1. Cosmos-Reason2-8B OOM on 8GB machine → migrated to M4 Max 48GB, also added tri-mode support (local 8B/2B + NIM API)
 2. Image context overflow (2880x1620) → PIL resize to 384px max
 3. Kitchen pet noise → YOLO + strict_mode AND condition
 4. Third-person VLM output → careful egocentric system prompt engineering
@@ -79,7 +82,7 @@ This maps directly to **ReachyMini** physical responses:
 
 ## Built with
 
-Python, llama.cpp, Qwen3-VL-2B, YOLO, Pollen Robotics ReachyMini, Cortex cognitive framework
+Python, llama.cpp, NVIDIA Cosmos Reason2, YOLO, Pollen Robotics ReachyMini, Cortex cognitive framework
 ```
 
 ## GitHub Repository
@@ -106,5 +109,5 @@ Team 668: Tsubasa (AI agent) + Kana (human partner)
 
 ## By The Numbers
 ```
-8,773 Python lines | 201 tests | 74 commits | 0 dependencies | MIT License
+8,779+ Python lines | 203 tests | 77+ commits | 0 dependencies | MIT License
 ```
