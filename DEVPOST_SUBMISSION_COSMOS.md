@@ -61,7 +61,7 @@ All modes use llama.cpp via OpenAI-compatible API.
 | Raw motion events | 2,663 |
 | Passed to VLM | 224 (8%) |
 | Filtered (habituated) | 2,439 (92%) |
-| VLM inference latency | 0.8-4s (model dependent) |
+| VLM inference latency | 0.8-4.5s (model dependent) |
 | VLM model (primary) | Cosmos-Reason2-8B Q8_0 (8.7GB) |
 | VLM model (edge) | Cosmos-Reason2-2B (4.9GB) |
 

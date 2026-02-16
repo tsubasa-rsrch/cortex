@@ -328,7 +328,8 @@ The egocentric embodied AI direction is validated by recent papers:
 - [x] Batch inference demo with real camera images
 - [x] ReachyMini live demo — fully operational since 2/15!
 - [x] Live mode implemented (camera → Cortex filter → VLM → reachy_hub)
-- [x] Real VLM egocentric inference tested (823ms, first-person response)
+- [x] Real VLM egocentric inference tested (Qwen3-VL-2B: 823ms, Cosmos-8B: 4.5s)
+- [x] Cosmos-Reason2-8B Q8_0 tested on M4 Max 48GB (port 8092, first-person output confirmed)
 - [ ] Demo video (~3 min) - needs screen recording by Kana
 - [ ] Devpost submission
 
